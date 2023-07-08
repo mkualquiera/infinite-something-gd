@@ -36,11 +36,12 @@ func _input(event: InputEvent):
 					var first_child = coll_obj.get_child(0)
 					if first_child is ObjectController:
 						var controller: ObjectController = first_child
-						#print_debug(controller.interactions)	
+						#print_debug(controller.interactions)
 						current_controller = controller
 						item_list.clear()
 						for interaction in controller.interactions:
 							item_list.add_item(interaction.display_name)
+						get_parent().get_parent().find_child("Player").set_movement_target(controller.global_position)
 
 func _on_item_selected(index: int):
 	if current_controller != null:

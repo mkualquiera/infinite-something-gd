@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://dbufk2qqvrxh5"]
+[gd_scene load_steps=19 format=3 uid="uid://dbufk2qqvrxh5"]
 
 [ext_resource type="Texture2D" uid="uid://bx01i2fg5yumw" path="res://icon.svg" id="1_el1gu"]
+[ext_resource type="Script" path="res://Scripts/RoomLoader.gd" id="1_op3e8"]
 [ext_resource type="PackedScene" uid="uid://c1356mhr7g72v" path="res://Scenes/texture_generator.tscn" id="2_ajs2a"]
 [ext_resource type="Script" path="res://Scripts/MusicGenerator.gd" id="3_0l123"]
 [ext_resource type="Script" path="res://Scripts/ObjectSelector.gd" id="4_472rn"]
@@ -35,6 +36,7 @@ size = Vector3(0.5, 0.5, 0.5)
 material = SubResource("StandardMaterial3D_mc0wt")
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_op3e8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4, 3.49691e-07, 5.06714e-15, 0, -1.74846e-07, 1.326, 3.49691e-07, 4, 5.79613e-08, 0, 0, 0)
@@ -148,6 +150,8 @@ shape = SubResource("BoxShape3D_w75n3")
 transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 0.36, 0, -0.0684238, 0)
 mesh = SubResource("BoxMesh_gljbj")
 skeleton = NodePath("../..")
+
+[node name="Node" type="Node" parent="."]
 
 [connection signal="input_event" from="MeshInstance3D/StaticBody3D" to="Player" method="_click"]
 [connection signal="text_changed" from="URLEditor/TextEdit" to="URLEditor" method="update_button"]

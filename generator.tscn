@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0ak54l04gfjg"]
+
+[ext_resource type="Script" path="res://Scripts/RoomManager.gd" id="1_6vf48"]
+[ext_resource type="PackedScene" uid="uid://dbufk2qqvrxh5" path="res://test.tscn" id="1_go1g7"]
+
+[node name="generator" type="Node"]
+script = ExtResource("1_6vf48")
+
+[node name="Node3D" parent="." instance=ExtResource("1_go1g7")]
+
+[node name="Node3D2" parent="." instance=ExtResource("1_go1g7")]

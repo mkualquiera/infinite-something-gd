@@ -1,4 +1,5 @@
 extends CharacterBody3D
+class_name PlayerMover
 
 var movement_speed: float = 2.0
 var navigation_agent: NavigationAgent3D = null
