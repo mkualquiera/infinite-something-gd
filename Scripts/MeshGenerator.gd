@@ -4,6 +4,8 @@ class_name MeshGenerator
 @export var mesh_description = "Underwater"
 @export var load_on_ready = false
 
+signal done_loading()
+
 func _ready():
 	if load_on_ready:
 		do_load()
@@ -45,3 +47,5 @@ func _http_request_completed(result, response_code, headers, body):
 	# Set the material to the mesh
 	var mesh_instance = get_parent()
 	mesh_instance.mesh = mesh
+	
+	emit_signal("done_loading")

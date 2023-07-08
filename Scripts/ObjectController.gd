@@ -10,6 +10,18 @@ var texture_prompt: String = ""
 func _ready():
 	pass # Replace with function body.
 
+var loading_counter: int = 0
+var loading_debounced: bool = false
+
+signal on_done_loading()
+
+func on_child_done_loading():
+	if loading_debounced:
+		return
+	loading_counter -= 1
+	if loading_counter <= 0:
+		emit_signal("on_done_loading")
+		loading_debounced = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -37,6 +49,7 @@ func update_rendering(world):
 		HTTPClient.METHOD_POST, json_request)
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
+	loading_counter += 1
 		
 	http_request = HTTPRequest.new()
 	add_child(http_request)
@@ -47,6 +60,7 @@ func update_rendering(world):
 		HTTPClient.METHOD_POST, json_request)
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
+	loading_counter += 1
 
 func _on_prompt_generated(result, response_code, headers, body):
 	
@@ -58,6 +72,7 @@ func _on_prompt_generated(result, response_code, headers, body):
 	
 	var texture_generator: MeshGenerator = get_parent().get_child(1)
 	texture_generator.mesh_description = prompt
+	texture_generator.connect("done_loading",on_child_done_loading)
 	texture_generator.do_load()
 
 func _on_interactions_generated(result, response_code, headers, body):
@@ -66,6 +81,7 @@ func _on_interactions_generated(result, response_code, headers, body):
 	var data = JSON.parse_string(json)
 	
 	interactions = data["interactions"]
+	on_child_done_loading()
 	print_debug(interactions)
 	
 func do_interaction(index):

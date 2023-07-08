@@ -1,9 +1,12 @@
 extends Node
+class_name MusicGenerator
 
 @export var music_description = "Drums, tribal, indigenous, dangerous"
 @export var load_on_ready = false
 @export var duration = 30.0
 @export var loops = 3
+
+signal done_loading()
 
 func _ready():
 	if load_on_ready:
@@ -45,6 +48,7 @@ func _http_request_completed(result, response_code, headers, body):
 		
 		var audio_player: AudioStreamPlayer = get_parent()
 		audio_player.stream = audio_stream
-		audio_player.play()
 	else:
 		print("Audio fail", result, "and", response_code)
+		
+	emit_signal("done_loading")

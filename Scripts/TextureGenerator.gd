@@ -5,6 +5,8 @@ class_name TextureGenerator
 @export var load_on_ready = false
 @export var extra_meshes: Node
 
+signal done_loading()
+
 func _ready():
 	if load_on_ready:
 		do_load()
@@ -63,3 +65,5 @@ func _http_request_completed(result, response_code, headers, body):
 	
 	if extra_meshes:
 		extra_meshes.material_override = material
+	
+	emit_signal("done_loading")
