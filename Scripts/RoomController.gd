@@ -1,15 +1,26 @@
-extends Node3D
+extends Node
 class_name RoomController
 
 @export var room_theme = "A videogame with the theme: Underwater"
 @export var load_on_ready = false
 @export var floor: MeshInstance3D
 @export var l_wall: MeshInstance3D
+@export var music_gen: MusicGenerator
 @export var obj_padding: float = 0.5
 @export var room_manager: RoomManager
 @export var room_position: Vector2i
 var controllers: Array[ObjectController]
 var world: Dictionary
+
+var loading_counter: int = 0
+
+signal on_done_loading(pos)
+
+func on_child_done_loading():
+	loading_counter -= 1
+	print_debug("Loading counter ", loading_counter)
+	if loading_counter <= 0:
+		emit_signal("on_done_loading", room_position)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -68,6 +79,11 @@ func load_room():
 		HTTPClient.METHOD_POST, json_request)
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
+	
+	loading_counter += 1
+	music_gen.connect("done_loading",on_child_done_loading)
+	music_gen.do_load()
+	
 		
 func _on_room_texture_prompts_generated(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
@@ -75,10 +91,14 @@ func _on_room_texture_prompts_generated(result, response_code, headers, body):
 	
 	var floor_gen: TextureGenerator = floor.get_child(0)
 	floor_gen.texture_description = data["floor_texture"]
+	loading_counter += 1
+	floor_gen.connect("done_loading",on_child_done_loading)
 	floor_gen.do_load()
 	
 	var wall_l_gen: TextureGenerator = l_wall.get_child(0)
 	wall_l_gen.texture_description = data["wall_texture"]
+	loading_counter += 1
+	wall_l_gen.connect("done_loading",on_child_done_loading)
 	wall_l_gen.do_load()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -94,9 +114,11 @@ func _on_room_generated(result, response_code, headers, body):
 	world = data
 	
 	for object in data["objects"]:
+		loading_counter += 1
 		var controller = _create_object(object, false)
 		controllers.append(controller)
 		controller.update_rendering(data)		
+		controller.connect("on_done_loading", on_child_done_loading)
 
 func do_interaction(object: ObjectController, interaction):
 	# Create an HTTP request node and connect its completion signal.
@@ -203,8 +225,9 @@ func _create_object(object, add=true):
 
 
 func _on_player_enter():
-	room_manager.instantiate_room(room_position + Vector2i(1,0))
-	room_manager.instantiate_room(room_position + Vector2i(0,1))
-	room_manager.instantiate_room(room_position + Vector2i(-1,0))
-	room_manager.instantiate_room(room_position + Vector2i(0,-1))
+	pass
+	room_manager.enqueue_room(room_position + Vector2i(1,0))
+	room_manager.enqueue_room(room_position + Vector2i(0,1))
+	room_manager.enqueue_room(room_position + Vector2i(-1,0))
+	room_manager.enqueue_room(room_position + Vector2i(0,-1))
 	
