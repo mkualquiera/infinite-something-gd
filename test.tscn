@@ -1,16 +1,38 @@
-[gd_scene load_steps=8 format=3 uid="uid://dbufk2qqvrxh5"]
+[gd_scene load_steps=18 format=3 uid="uid://dbufk2qqvrxh5"]
 
 [ext_resource type="Texture2D" uid="uid://bx01i2fg5yumw" path="res://icon.svg" id="1_el1gu"]
 [ext_resource type="PackedScene" uid="uid://c1356mhr7g72v" path="res://Scenes/texture_generator.tscn" id="2_ajs2a"]
 [ext_resource type="Script" path="res://Scripts/MusicGenerator.gd" id="3_0l123"]
 [ext_resource type="Script" path="res://Scripts/ObjectSelector.gd" id="4_472rn"]
 [ext_resource type="Script" path="res://Scripts/RoomController.gd" id="4_x0bsm"]
+[ext_resource type="Script" path="res://Scripts/PrefChanger.gd" id="6_7j8ua"]
+[ext_resource type="PackedScene" uid="uid://bc5xaq1p75vp7" path="res://Scenes/room_object.tscn" id="7_4txbg"]
+[ext_resource type="Script" path="res://Scripts/PlayerMover.gd" id="8_edel6"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_esw8q"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_owkes"]
 albedo_texture = ExtResource("1_el1gu")
 uv1_scale = Vector3(3, 3, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_axmun"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_qtd14"]
+vertices = PackedVector3Array(0.25, 0.5, 4.5, 0.25, 0.5, 1.5, -0.75, 0.5, 1.25, -4.5, 0.5, 4.5, -0.75, 0.5, 0.25, 0.25, 0.5, 0, 0.25, 0.5, -4.5, -0.75, 0.5, 0.25, 0.25, 0.5, -4.5, -4.5, 0.5, -4.5, -4.5, 0.5, 4.5, -4.5, 0.5, 4.5, -0.75, 0.5, 1.25, -0.75, 0.5, 0.25, 1, 0.5, 1.25, 0.25, 0.5, 1.5, 0.25, 0.5, 4.5, 4.5, 0.5, 4.5, 1, 0.5, 0.25, 4.5, 0.5, 4.5, 4.5, 0.5, -4.5, 0.25, 0.5, -4.5, 0.25, 0.5, -4.5, 0.25, 0.5, 0, 1, 0.5, 0.25, 1, 0.5, 0.25, 1, 0.5, 1.25, 4.5, 0.5, 4.5)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(6, 5, 4), PackedInt32Array(8, 7, 9), PackedInt32Array(9, 7, 10), PackedInt32Array(13, 12, 11), PackedInt32Array(15, 14, 16), PackedInt32Array(16, 14, 17), PackedInt32Array(21, 20, 18), PackedInt32Array(18, 20, 19), PackedInt32Array(24, 23, 22), PackedInt32Array(27, 26, 25)]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_crdxp"]
+size = Vector2(10, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_va8yk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w75n3"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mc0wt"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_gljbj"]
+material = SubResource("StandardMaterial3D_mc0wt")
 
 [node name="Node3D" type="Node3D"]
 
@@ -21,6 +43,13 @@ surface_material_override/0 = SubResource("StandardMaterial3D_owkes")
 
 [node name="TextureGenerator" parent="MeshInstance3D" instance=ExtResource("2_ajs2a")]
 texture_description = "Soft soil, dirt texture, videogame asset"
+load_on_ready = false
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -8.47033e-22, 0, 1, 0, 0, -0.5)
+shape = SubResource("BoxShape3D_axmun")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 2.48462, 1.82819, 2.45364)
@@ -40,10 +69,19 @@ item_list = NodePath("../../ItemList")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.58616, 0.810195, 0, -0.810195, 0.58616, 0, 0, 0)
 
-[node name="RoomController" type="Node3D" parent="."]
+[node name="RoomController" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_qtd14")
 script = ExtResource("4_x0bsm")
 room_theme = "A videogame with the theme: Jungle"
-load_on_ready = true
+
+[node name="MeshInstance3D2" parent="RoomController" instance=ExtResource("7_4txbg")]
+transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 0.36, 0.086, 0.565842, 0.726)
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RoomController"]
+visible = false
+mesh = SubResource("PlaneMesh_crdxp")
+skeleton = NodePath("")
 
 [node name="ItemList" type="ItemList" parent="."]
 anchors_preset = 2
@@ -65,3 +103,52 @@ item_7/text = "asd"
 item_8/text = "ads"
 item_9/text = "asd"
 item_10/text = "asd"
+
+[node name="URLEditor" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 35.0
+script = ExtResource("6_7j8ua")
+
+[node name="TextEdit" type="TextEdit" parent="URLEditor"]
+layout_mode = 2
+offset_left = 15.0
+offset_top = 8.0
+offset_right = 469.0
+offset_bottom = 43.0
+text = "ghtyhyt"
+scroll_fit_content_height = true
+
+[node name="Button" type="Button" parent="URLEditor"]
+layout_mode = 2
+offset_left = 479.0
+offset_top = 9.0
+offset_right = 526.0
+offset_bottom = 45.0
+text = "save"
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 0.36, 0, 0.182675, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_va8yk")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6453, 0.291122, 1.31798)
+motion_mode = 1
+floor_stop_on_slope = false
+floor_block_on_wall = false
+script = ExtResource("8_edel6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("BoxShape3D_w75n3")
+
+[node name="Player" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 0.36, 0, -0.0684238, 0)
+mesh = SubResource("BoxMesh_gljbj")
+skeleton = NodePath("../..")
+
+[connection signal="input_event" from="MeshInstance3D/StaticBody3D" to="Player" method="_click"]
+[connection signal="text_changed" from="URLEditor/TextEdit" to="URLEditor" method="update_button"]
+[connection signal="pressed" from="URLEditor/Button" to="URLEditor" method="update_pref"]

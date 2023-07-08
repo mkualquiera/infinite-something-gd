@@ -1,0 +1,21 @@
+extends Node
+
+
+@export var pref_name = "inference_url"
+@onready var text_box = $TextEdit
+@onready var button = $Button
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	text_box.text = PlayerPrefs.get_pref(pref_name)
+	update_button()
+
+
+func update_button():
+	button.visible = text_box.text != PlayerPrefs.get_pref(pref_name)
+
+
+func update_pref():
+	PlayerPrefs.set_pref(pref_name, text_box.text)
+	update_button()

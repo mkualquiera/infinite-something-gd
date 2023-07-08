@@ -14,7 +14,7 @@ func _ready():
 func _process(delta):
 	pass
 	
-func _unhandled_input(event: InputEvent):
+func _input(event: InputEvent):
 	if event is InputEventMouseButton:
 		if event.pressed:
 			var mouse_pos = get_viewport().get_mouse_position()
@@ -43,7 +43,8 @@ func _unhandled_input(event: InputEvent):
 							item_list.add_item(interaction.display_name)
 
 func _on_item_selected(index: int):
-	item_list.clear()
-	print_debug("Doing interaction")
-	current_controller.do_interaction(index)
-	current_controller = null
+	if current_controller != null:
+		item_list.clear()
+		print_debug("Doing interaction")
+		current_controller.do_interaction(index)
+		current_controller = null

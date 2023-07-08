@@ -36,7 +36,6 @@ func do_load():
 
 # Called when the HTTP request is completed.
 func _http_request_completed(result, response_code, headers, body):
-	
 	var json = body.get_string_from_utf8()
 	var img = JSON.parse_string(json)["image"]
 	

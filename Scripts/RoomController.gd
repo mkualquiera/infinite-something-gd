@@ -55,27 +55,12 @@ var room_obj_scene = preload("res://Scenes/room_object.tscn")
 
 # Called when the HTTP request is completed.
 func _on_room_generated(result, response_code, headers, body):
-	
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
 	world = data
 	
 	for object in data["objects"]:
-		var room_obj: MeshInstance3D = room_obj_scene.instantiate()
-		add_child(room_obj)
-		
-		var controller: ObjectController = room_obj.get_child(0)
-
-		controller.obj_name = object["name"]
-		controller.metadata = object["metadata"]
-		print_debug("Created object "+ object["name"])
-
-		# Move the object to a random place horizontally.
-		var x = randf_range(-2, 2)
-		var z = randf_range(-2, 2)
-		room_obj.position.x = x
-		room_obj.position.z = z
-		
+		var controller = _create_object(object)
 		controller.update_rendering(data)		
 
 func do_interaction(object: ObjectController, interaction):
@@ -132,23 +117,7 @@ func _on_interaction_completed(result, response_code, headers, body):
 	if data.has("create_objects"):
 		if data["create_objects"] is Array:
 			for object in data["create_objects"]:
-				var room_obj: MeshInstance3D = room_obj_scene.instantiate()
-				add_child(room_obj)
-				
-				var controller: ObjectController = room_obj.get_child(0)
-		
-				controller.obj_name = object["name"]
-				controller.metadata = object["metadata"]
-				print_debug("Created object "+ object["name"])
-		
-				# Move the object to a random place horizontally.
-				var x = randf_range(-2, 2)
-				var z = randf_range(-2, 2)
-				room_obj.position.x = x
-				room_obj.position.z = z
-				
-				world["objects"].append(object)
-				
+				var controller = _create_object(object)
 				update_queue.append(controller)
 
 	if data.has("overwrite_metadata"):
@@ -171,3 +140,23 @@ func _on_interaction_completed(result, response_code, headers, body):
 	for controller in update_queue:
 		controller.update_rendering(world)
 	
+
+
+func _create_object(object):
+	var room_obj: MeshInstance3D = room_obj_scene.instantiate()
+	add_child(room_obj)
+	
+	var controller: ObjectController = room_obj.get_child(0)
+
+	controller.obj_name = object["name"]
+	controller.metadata = object["metadata"]
+	print_debug("Created object "+ object["name"])
+
+	# Move the object to a random place horizontally.
+	var x = randf_range(-2, 2)
+	var z = randf_range(-2, 2)
+	room_obj.position.x = x
+	room_obj.position.z = z
+	
+	world["objects"].append(object)
+	return controller
