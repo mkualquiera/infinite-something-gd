@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://biwp7w1s3xueg"]
+
+[ext_resource type="Script" path="res://Scripts/PrefChanger.gd" id="1_m1n52"]
+
+[node name="URLEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 35.0
+script = ExtResource("1_m1n52")
+
+[node name="TextEdit" type="TextEdit" parent="."]
+layout_mode = 2
+offset_top = 26.0
+offset_right = 461.0
+offset_bottom = 61.0
+text = "ghtyhyt"
+scroll_fit_content_height = true
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+offset_left = 462.0
+offset_top = 26.0
+offset_right = 509.0
+offset_bottom = 62.0
+text = "save"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "URL for the AI service"
+
+[connection signal="text_changed" from="TextEdit" to="." method="update_button"]
+[connection signal="pressed" from="Button" to="." method="update_pref"]
