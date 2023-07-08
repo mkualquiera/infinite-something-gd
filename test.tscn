@@ -1,0 +1,67 @@
+[gd_scene load_steps=8 format=3 uid="uid://dbufk2qqvrxh5"]
+
+[ext_resource type="Texture2D" uid="uid://bx01i2fg5yumw" path="res://icon.svg" id="1_el1gu"]
+[ext_resource type="PackedScene" uid="uid://c1356mhr7g72v" path="res://Scenes/texture_generator.tscn" id="2_ajs2a"]
+[ext_resource type="Script" path="res://Scripts/MusicGenerator.gd" id="3_0l123"]
+[ext_resource type="Script" path="res://Scripts/ObjectSelector.gd" id="4_472rn"]
+[ext_resource type="Script" path="res://Scripts/RoomController.gd" id="4_x0bsm"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_esw8q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_owkes"]
+albedo_texture = ExtResource("1_el1gu")
+uv1_scale = Vector3(3, 3, 3)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4, 3.49691e-07, 5.06714e-15, 0, -1.74846e-07, 1.326, 3.49691e-07, 4, 5.79613e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_esw8q")
+surface_material_override/0 = SubResource("StandardMaterial3D_owkes")
+
+[node name="TextureGenerator" parent="MeshInstance3D" instance=ExtResource("2_ajs2a")]
+texture_description = "Soft soil, dirt texture, videogame asset"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 2.48462, 1.82819, 2.45364)
+projection = 1
+size = 3.497
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Camera3D"]
+
+[node name="MusicGenerator" type="Node" parent="Camera3D/AudioStreamPlayer"]
+script = ExtResource("3_0l123")
+load_on_ready = true
+
+[node name="ObjectSelector" type="Node" parent="Camera3D" node_paths=PackedStringArray("item_list")]
+script = ExtResource("4_472rn")
+item_list = NodePath("../../ItemList")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.58616, 0.810195, 0, -0.810195, 0.58616, 0, 0, 0)
+
+[node name="RoomController" type="Node3D" parent="."]
+script = ExtResource("4_x0bsm")
+room_theme = "A videogame with the theme: Jungle"
+load_on_ready = true
+
+[node name="ItemList" type="ItemList" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -264.0
+offset_right = 448.0
+offset_bottom = 1.0
+grow_vertical = 0
+item_count = 11
+item_0/text = "adasasd"
+item_1/text = "fsdsdfdfs"
+item_2/text = "sfdsdfsdf"
+item_3/text = "asd"
+item_4/text = "ads"
+item_5/text = "ads"
+item_6/text = "asd"
+item_7/text = "asd"
+item_8/text = "ads"
+item_9/text = "asd"
+item_10/text = "asd"
