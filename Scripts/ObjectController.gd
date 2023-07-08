@@ -75,4 +75,4 @@ func do_interaction(index):
 	
 func destroy():
 	get_parent().queue_free()
-
+	

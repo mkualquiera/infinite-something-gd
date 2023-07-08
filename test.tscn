@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://dbufk2qqvrxh5"]
 
-[ext_resource type="PackedScene" uid="uid://cpeev13kyomwl" path="res://Scenes/room.tscn" id="2_4jw7d"]
+[ext_resource type="Script" path="res://Scripts/RoomManager.gd" id="1_ji7bp"]
 [ext_resource type="Script" path="res://Scripts/CameraFollow.gd" id="2_sgtnk"]
 [ext_resource type="Script" path="res://Scripts/ObjectSelector.gd" id="4_472rn"]
 [ext_resource type="Script" path="res://Scripts/PrefChanger.gd" id="6_7j8ua"]
@@ -16,9 +16,9 @@ material = SubResource("StandardMaterial3D_mc0wt")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gat1o"]
 albedo_color = Color(1, 0.317647, 1, 1)
 
-[node name="Node3D" type="Node3D"]
-
-[node name="Room" parent="." instance=ExtResource("2_4jw7d")]
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("player")]
+script = ExtResource("1_ji7bp")
+player = NodePath("Player")
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 2.4812, 1.8361, 2.44897)
@@ -95,6 +95,5 @@ mesh = SubResource("BoxMesh_gljbj")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_gat1o")
 
-[connection signal="input_event" from="Room" to="Player" method="_click"]
 [connection signal="text_changed" from="URLEditor/TextEdit" to="URLEditor" method="update_button"]
 [connection signal="pressed" from="URLEditor/Button" to="URLEditor" method="update_pref"]

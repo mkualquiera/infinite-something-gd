@@ -6,6 +6,8 @@ class_name RoomController
 @export var floor: MeshInstance3D
 @export var l_wall: MeshInstance3D
 @export var obj_padding: float = 0.5
+@export var room_manager: RoomManager
+@export var room_position: Vector2i
 var controllers: Array[ObjectController]
 var world: Dictionary
 
@@ -198,3 +200,11 @@ func _create_object(object, add=true):
 	if add:
 		world["objects"].append(object)
 	return controller
+
+
+func _on_player_enter():
+	room_manager.instantiate_room(room_position + Vector2i(1,0))
+	room_manager.instantiate_room(room_position + Vector2i(0,1))
+	room_manager.instantiate_room(room_position + Vector2i(-1,0))
+	room_manager.instantiate_room(room_position + Vector2i(0,-1))
+	
