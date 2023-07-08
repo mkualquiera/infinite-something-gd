@@ -1,5 +1,9 @@
 extends Node3D
 
+signal input_event(camera:Node, event:InputEvent, position:Vector3, normal:Vector3, shape_idx:int)
+
+func input_event_daisy(camera:Node, event:InputEvent, position:Vector3, normal:Vector3, shape_idx:int):
+	emit_signal("input_event", camera, event, position, normal, shape_idx)	
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

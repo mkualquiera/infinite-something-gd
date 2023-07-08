@@ -56,8 +56,8 @@ func _on_prompt_generated(result, response_code, headers, body):
 	var prompt = data["prompt"]
 	print_debug(prompt)
 	
-	var texture_generator: TextureGenerator = get_parent().get_child(1)
-	texture_generator.texture_description = prompt
+	var texture_generator: MeshGenerator = get_parent().get_child(1)
+	texture_generator.mesh_description = prompt
 	texture_generator.do_load()
 
 func _on_interactions_generated(result, response_code, headers, body):

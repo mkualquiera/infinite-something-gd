@@ -3,7 +3,7 @@ class_name TextureGenerator
 
 @export var texture_description = "Underwater"
 @export var load_on_ready = false
-@export var extra_meshes: Array[MeshInstance3D]
+@export var extra_meshes: Node
 
 func _ready():
 	if load_on_ready:
@@ -61,5 +61,5 @@ func _http_request_completed(result, response_code, headers, body):
 	var mesh_instance = get_parent()
 	mesh_instance.material_override = material
 	
-	for mesh in extra_meshes:
-		mesh.material_override = material
+	if extra_meshes:
+		extra_meshes.material_override = material

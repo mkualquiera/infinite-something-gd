@@ -5,7 +5,6 @@ class_name RoomController
 @export var load_on_ready = false
 @export var floor: MeshInstance3D
 @export var l_wall: MeshInstance3D
-@export var r_wall: MeshInstance3D
 var world: Dictionary
 
 # Called when the node enters the scene tree for the first time.
@@ -49,6 +48,23 @@ func load_room():
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
 		
+	# Create an HTTP request node and connect its completion signal.
+	http_request = HTTPRequest.new()
+	add_child(http_request)
+	http_request.connect("request_completed", _on_room_texture_prompts_generated)
+
+	request_data = {
+		"world_desc": room_theme
+	}
+	
+	json_request = JSON.stringify(request_data)
+
+	# Perform the HTTP request. The URL below returns a PNG image as of writing.
+	error = http_request.request(inference_url + "/gen_room_textures", [], 
+		HTTPClient.METHOD_POST, json_request)
+	if error != OK:
+		push_error("An error occurred in the HTTP request.")
+		
 func _on_room_texture_prompts_generated(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
@@ -74,7 +90,7 @@ func _on_room_generated(result, response_code, headers, body):
 	world = data
 	
 	for object in data["objects"]:
-		var controller = _create_object(object)
+		var controller = _create_object(object, false)
 		controller.update_rendering(data)		
 
 func do_interaction(object: ObjectController, interaction):
@@ -156,7 +172,7 @@ func _on_interaction_completed(result, response_code, headers, body):
 	
 
 
-func _create_object(object):
+func _create_object(object, add=true):
 	var room_obj: MeshInstance3D = room_obj_scene.instantiate()
 	add_child(room_obj)
 	
@@ -172,5 +188,6 @@ func _create_object(object):
 	room_obj.position.x = x
 	room_obj.position.z = z
 	
-	world["objects"].append(object)
+	if add:
+		world["objects"].append(object)
 	return controller
