@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 class_name ObjectController
 
 @export var obj_name: String = "undefined"
@@ -16,7 +16,7 @@ func _process(delta):
 	pass
 
 func update_rendering(world):
-		# Create an HTTP request node and connect its completion signal.
+	# Create an HTTP request node and connect its completion signal.
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.connect("request_completed", _on_prompt_generated)

@@ -1,7 +1,7 @@
 extends Node
-class_name TextureGenerator
+class_name MeshGenerator
 
-@export var texture_description = "Underwater"
+@export var mesh_description = "Underwater"
 @export var load_on_ready = false
 
 func _ready():
@@ -20,15 +20,14 @@ func do_load():
 	#	"sampler": "sample_dpmpp_2m"
 	#}
 	var request_data = {
-		"text": texture_description,
-		"sampler": "sample_dpmpp_2m"
+		"text": mesh_description
 	}
 	
 	var json_request = JSON.stringify(request_data)
 
 	# Perform the HTTP request. The URL below returns a PNG image as of writing.
 	var inference_url = PlayerPrefs.get_pref("inference_url")
-	var error = http_request.request(inference_url + "/generate_texture", [], 
+	var error = http_request.request(inference_url + "/generate_mesh_point_e", [], 
 		HTTPClient.METHOD_POST, json_request)
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
@@ -37,25 +36,10 @@ func do_load():
 # Called when the HTTP request is completed.
 func _http_request_completed(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
-	var img = JSON.parse_string(json)["image"]
+	var obj = JSON.parse_string(json)["obj"]
 	
-	var data = Marshalls.base64_to_raw(img)
+	var mesh = ObjParse.load_obj_from_buffer(obj, {})
 	
-	var image = Image.new()
-	var error = image.load_png_from_buffer(data)
-	if error != OK:
-		push_error("Couldn't load the image.")
-
-	var texture = ImageTexture.create_from_image(image)
-
-	#var material: BaseMaterial3D = get_parent().get_active_material(0)
-	#material.albedo_texture = texture
-
-	# Create new material
-	var material: BaseMaterial3D = get_parent().get_active_material(0)
-	material = material.duplicate()
-	material.albedo_texture = texture
-
 	# Set the material to the mesh
 	var mesh_instance = get_parent()
-	mesh_instance.material_override = material
+	mesh_instance.mesh = mesh

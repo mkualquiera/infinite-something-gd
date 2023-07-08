@@ -14,7 +14,7 @@ func _ready():
 func _process(delta):
 	pass
 	
-func _unhandled_input(event: InputEvent):
+func _input(event: InputEvent):
 	if event is InputEventMouseButton:
 		if event.pressed:
 			var mouse_pos = get_viewport().get_mouse_position()
@@ -36,14 +36,16 @@ func _unhandled_input(event: InputEvent):
 					var first_child = coll_obj.get_child(0)
 					if first_child is ObjectController:
 						var controller: ObjectController = first_child
-						#print_debug(controller.interactions)	
+						#print_debug(controller.interactions)
 						current_controller = controller
 						item_list.clear()
 						for interaction in controller.interactions:
 							item_list.add_item(interaction.display_name)
+						get_parent().get_parent().find_child("Player").set_movement_target(controller.global_position)
 
 func _on_item_selected(index: int):
-	item_list.clear()
-	print_debug("Doing interaction")
-	current_controller.do_interaction(index)
-	current_controller = null
+	if current_controller != null:
+		item_list.clear()
+		print_debug("Doing interaction")
+		current_controller.do_interaction(index)
+		current_controller = null
