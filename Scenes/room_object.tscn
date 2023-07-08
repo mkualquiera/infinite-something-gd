@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bc5xaq1p75vp7"]
 
-[ext_resource type="Script" path="res://Scripts/ObjectController.gd" id="1_oxcli"]
+[ext_resource type="Script" path="res://Scripts/ObjectController.gd" id="1_8c0j5"]
 [ext_resource type="Script" path="res://Scripts/TextureGenerator.gd" id="2_hj725"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mc0wt"]
@@ -15,7 +15,7 @@ transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 0.36, 0, 0.182675, 0)
 mesh = SubResource("BoxMesh_gljbj")
 
 [node name="Node" type="Node" parent="."]
-script = ExtResource("1_oxcli")
+script = ExtResource("1_8c0j5")
 
 [node name="Node2" type="Node" parent="."]
 script = ExtResource("2_hj725")
@@ -23,5 +23,4 @@ script = ExtResource("2_hj725")
 [node name="Area3D" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_va8yk")
