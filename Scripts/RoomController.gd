@@ -5,6 +5,8 @@ class_name RoomController
 @export var load_on_ready = false
 @export var floor: MeshInstance3D
 @export var l_wall: MeshInstance3D
+@export var obj_padding: float = 0.5
+var controllers: Array[ObjectController]
 var world: Dictionary
 
 # Called when the node enters the scene tree for the first time.
@@ -91,6 +93,7 @@ func _on_room_generated(result, response_code, headers, body):
 	
 	for object in data["objects"]:
 		var controller = _create_object(object, false)
+		controllers.append(controller)
 		controller.update_rendering(data)		
 
 func do_interaction(object: ObjectController, interaction):
@@ -130,9 +133,10 @@ func _on_interaction_completed(result, response_code, headers, body):
 				var counter = 0
 				for object in objects:
 					if object["name"] == to_delete["name"]:
+						var controller: ObjectController = controllers[counter]
+						controller.destroy()
+						controllers.remove_at(counter)
 						objects.remove_at(counter)
-						var child = get_child(counter)
-						child.queue_free()
 						break
 					counter += 1 
 				
@@ -148,7 +152,9 @@ func _on_interaction_completed(result, response_code, headers, body):
 		if data["create_objects"] is Array:
 			for object in data["create_objects"]:
 				var controller = _create_object(object)
+				controllers.append(controller)
 				update_queue.append(controller)
+				world["objects"].append(object)
 
 	if data.has("overwrite_metadata"):
 		if data["overwrite_metadata"] is Array:
@@ -158,11 +164,9 @@ func _on_interaction_completed(result, response_code, headers, body):
 				for object in objects:
 					if object["name"] == update_metadata["name"]:
 						for key in update_metadata["metadata"].keys():
-							object["metadata"]["key"] = update_metadata["metadata"]["key"]
-						var child = get_child(counter)
-						var controller: ObjectController = child.get_child(counter)
+							object["metadata"][key] = update_metadata["metadata"][key]
+						var controller: ObjectController = controllers[counter]
 						controller.metadata = object["metadata"]
-						
 						update_queue.append(controller)
 						
 					counter += 1 
@@ -183,10 +187,13 @@ func _create_object(object, add=true):
 	print_debug("Created object "+ object["name"])
 
 	# Move the object to a random place horizontally.
-	var x = randf_range(-2, 2)
-	var z = randf_range(-2, 2)
+	var area_x = floor.scale.x / 2
+	var area_z = floor.scale.z / 2
+	var x = randf_range(-area_x + obj_padding, area_x - obj_padding)
+	var z = randf_range(-area_z + obj_padding, area_z - obj_padding)
 	room_obj.position.x = x
 	room_obj.position.z = z
+	room_obj.position.y = floor.position.y
 	
 	if add:
 		world["objects"].append(object)

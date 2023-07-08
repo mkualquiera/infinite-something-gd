@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cpeev13kyomwl"]
+[gd_scene load_steps=14 format=3 uid="uid://cpeev13kyomwl"]
 
 [ext_resource type="Script" path="res://Scripts/RoomLoader.gd" id="1_vpq05"]
 [ext_resource type="Texture2D" uid="uid://bx01i2fg5yumw" path="res://icon.svg" id="1_yta44"]
@@ -25,6 +25,10 @@ size = Vector3(1, 1, 0.3)
 albedo_texture = ExtResource("1_yta44")
 uv1_scale = Vector3(3, 1, 3)
 
+[sub_resource type="BoxMesh" id="BoxMesh_4kxwt"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_knog4"]
+
 [node name="Room" type="Node3D"]
 transform = Transform3D(1, -3.13716e-22, -7.10543e-15, 2.75725e-22, 1, -1.42109e-14, 7.10543e-15, -1.51583e-28, 1, 0, 1.19209e-07, 5.68434e-14)
 script = ExtResource("1_vpq05")
@@ -39,7 +43,7 @@ floor = NodePath("../Floor")
 l_wall = NodePath("../LeftWall")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
-transform = Transform3D(-9, 1.35896e-06, 1.97083e-14, 2.17935e-20, -3.93402e-07, 2.986, 1.35896e-06, 9, 1.30522e-07, -4.41295e-28, -1.19209e-07, -5.68434e-14)
+transform = Transform3D(-9, 1.35896e-06, 1.97083e-14, 2.17935e-20, -3.93402e-07, 2.986, 1.35896e-06, 9, 1.30522e-07, -0.005, 0.011, 0)
 mesh = SubResource("QuadMesh_esw8q")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_owkes")
@@ -88,9 +92,20 @@ transform = Transform3D(1, 0, -1.77636e-15, -2.84217e-14, 1, 0, 2.84217e-14, -1.
 shape = SubResource("BoxShape3D_axmun")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+autoplay = true
 
 [node name="MusicGenerator" type="Node" parent="AudioStreamPlayer"]
 script = ExtResource("5_qda7y")
 load_on_ready = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.984, -5.38099e-43, 0, -1.61523e-30, 0.5, 0, 0, 0, 0.984, -4.41295e-28, 0, -4.5)
+mesh = SubResource("BoxMesh_4kxwt")
+
+[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
+transform = Transform3D(1, -5.47908e-43, 0, -1.04205e-28, 1, 0, 0, 1.20371e-35, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_knog4")
 
 [connection signal="input_event" from="Floor/StaticBody3D" to="." method="input_event_daisy"]

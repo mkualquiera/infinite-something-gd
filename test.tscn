@@ -7,7 +7,6 @@
 [ext_resource type="Script" path="res://Scripts/PlayerMover.gd" id="8_edel6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w75n3"]
-size = Vector3(0.5, 0.5, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mc0wt"]
 
@@ -82,7 +81,7 @@ offset_bottom = 45.0
 text = "save"
 
 [node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.291, 0)
+transform = Transform3D(0.522, 0, 0, 0, 0.522, 0, 0, 0, 0.522, 0, 0.291, 0)
 motion_mode = 1
 floor_stop_on_slope = false
 floor_block_on_wall = false
@@ -92,7 +91,6 @@ script = ExtResource("8_edel6")
 shape = SubResource("BoxShape3D_w75n3")
 
 [node name="Player" type="MeshInstance3D" parent="Player"]
-transform = Transform3D(0.36, 0, 0, 0, 0.36, 0, 0, 0, 0.36, 0, -0.0684238, 0)
 mesh = SubResource("BoxMesh_gljbj")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_gat1o")
