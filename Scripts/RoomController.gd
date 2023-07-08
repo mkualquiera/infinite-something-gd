@@ -3,6 +3,9 @@ class_name RoomController
 
 @export var room_theme = "A videogame with the theme: Underwater"
 @export var load_on_ready = false
+@export var floor: MeshInstance3D
+@export var l_wall: MeshInstance3D
+@export var r_wall: MeshInstance3D
 var world: Dictionary
 
 # Called when the node enters the scene tree for the first time.
@@ -46,6 +49,17 @@ func load_room():
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
 		
+func _on_room_texture_prompts_generated(result, response_code, headers, body):
+	var json = body.get_string_from_utf8()
+	var data = JSON.parse_string(json)
+	
+	var floor_gen: TextureGenerator = floor.get_child(0)
+	floor_gen.texture_description = data["floor_texture"]
+	floor_gen.do_load()
+	
+	var wall_l_gen: TextureGenerator = l_wall.get_child(0)
+	wall_l_gen.texture_description = data["wall_texture"]
+	wall_l_gen.do_load()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
