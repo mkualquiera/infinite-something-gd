@@ -145,6 +145,7 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 	# Setup
 	var mesh: ArrayMesh = ArrayMesh.new()
 	var vertices: PackedVector3Array = PackedVector3Array()
+	var colors: PackedColorArray = PackedColorArray()
 	var normals: PackedVector3Array = PackedVector3Array()
 	var uvs: PackedVector2Array = PackedVector2Array()
 	var faces: Dictionary = {}
@@ -164,14 +165,16 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 				# Vertice
 				var n_v: Vector3 = Vector3(parts[1].to_float(), parts[2].to_float(), parts[3].to_float())
 				vertices.append(n_v)
+				var color: Vector3 = Vector3(parts[4].to_float(), parts[5].to_float(), parts[6].to_float())
+				colors.append(Color(color.x, color.y, color.z))
 			"vn":
 				# Normal
 				var n_vn: Vector3 = Vector3(parts[1].to_float(), parts[2].to_float(), parts[3].to_float())
-				normals.append(n_vn)
+				# normals.append(n_vn)
 			"vt":
 				# UV
 				var n_uv: Vector2 = Vector2(parts[1].to_float(), 1 - parts[2].to_float())
-				uvs.append(n_uv)
+				# uvs.append(n_uv)
 			"usemtl":
 				# Material group
 				count_mtl += 1
@@ -196,6 +199,8 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 						var vertices_index: PackedStringArray = map.split("/")
 						if (vertices_index[0] != "f"):
 							face["v"].append(vertices_index[0].to_int() - 1)
+							if len(vertices_index) <= 1:
+								continue
 							face["vt"].append(vertices_index[1].to_int() - 1)
 							if (vertices_index.size() > 2):
 								face["vn"].append(vertices_index[2].to_int() - 1)
@@ -242,7 +247,9 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 		var st: SurfaceTool = SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		if (!mats.has(matgroup)):
-			mats[matgroup] = StandardMaterial3D.new()
+			var mat = StandardMaterial3D.new()
+			mat.vertex_color_use_as_albedo = true
+			mats[matgroup] = mat
 		st.set_material(mats[matgroup])
 		for face in faces[matgroup]:
 			if (face["v"].size() == 3):
@@ -251,6 +258,12 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 				fan_v.append(vertices[face["v"][0]])
 				fan_v.append(vertices[face["v"][2]])
 				fan_v.append(vertices[face["v"][1]])
+				
+				# Colors
+				var fan_c: PackedColorArray = PackedColorArray()
+				fan_c.append(colors[face["v"][0]])
+				fan_c.append(colors[face["v"][2]])
+				fan_c.append(colors[face["v"][1]])
 				
 				# Normals
 				var fan_vn: PackedVector3Array = PackedVector3Array()
@@ -267,7 +280,8 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 						if (f > -1):
 							var uv = uvs[f]
 							fan_vt.append(uv)
-				st.add_triangle_fan(fan_v, fan_vt, PackedColorArray(), PackedVector2Array(), fan_vn, [])
+				st.add_triangle_fan(fan_v, fan_vt, fan_c, PackedVector2Array(), fan_vn, [])
+		st.generate_normals()
 		mesh = st.commit(mesh)
 	
 	for k in mesh.get_surface_count():

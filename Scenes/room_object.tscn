@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://Scripts/ObjectController.gd" id="1_oxcli"]
 [ext_resource type="Script" path="res://Scripts/MeshGenerator.gd" id="2_5yx38"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mc0wt"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqefc"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_gljbj"]
-material = SubResource("StandardMaterial3D_mc0wt")
+material = SubResource("StandardMaterial3D_dqefc")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_va8yk"]
 
@@ -27,3 +27,4 @@ shape = SubResource("BoxShape3D_va8yk")
 
 [node name="Node3" type="Node" parent="."]
 script = ExtResource("2_5yx38")
+load_on_ready = true

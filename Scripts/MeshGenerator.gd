@@ -27,7 +27,7 @@ func do_load():
 
 	# Perform the HTTP request. The URL below returns a PNG image as of writing.
 	var inference_url = PlayerPrefs.get_pref("inference_url")
-	var error = http_request.request(inference_url + "/generate_mesh_point_e", [], 
+	var error = http_request.request(inference_url + "/generate_mesh_shap_e", [], 
 		HTTPClient.METHOD_POST, json_request)
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
@@ -35,8 +35,10 @@ func do_load():
 
 # Called when the HTTP request is completed.
 func _http_request_completed(result, response_code, headers, body):
-	var json = body.get_string_from_utf8()
-	var obj = JSON.parse_string(json)["obj"]
+	var json = JSON.parse_string(body.get_string_from_utf8())
+	if json == null:
+		return
+	var obj = json["obj"]
 	
 	var mesh = ObjParse.load_obj_from_buffer(obj, {})
 	
