@@ -49,12 +49,10 @@ func enqueue_room(pos: Vector2i):
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
 	var body = (await http_request.request_completed)[3]
-	var json = body.get_string_from_utf8()
-	json = JSON.parse_string(json)
-	if json == null:
+	var theme: String = body.get_string_from_utf8()
+	if theme.is_empty():
 		enqueue_room(pos)
 		return
-	var theme = json["theme"]
 	print_debug("Room ", pos, " Theme: ", theme)
 	room_queue.append(pos)
 	theme_queue.append(theme)
