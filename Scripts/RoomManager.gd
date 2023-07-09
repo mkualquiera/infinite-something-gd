@@ -11,6 +11,7 @@ var theme_queue: Array[String]
 var is_loading: bool = true
 var loaded_first_level = false
 @export var loading_screen: Control
+@export var theme_name: Label
 
 signal loading_finished(pos: Vector2i)
 
@@ -57,12 +58,13 @@ func enqueue_room(pos: Vector2i):
 	room_queue.append(pos)
 	theme_queue.append(theme)
 
-func _loading_finished(pos: Vector2i):
+func _loading_finished(pos: Vector2i, theme: String):
 	if !loaded_first_level:
 		loaded_first_level = true
 		loading_screen.hide()
 		rooms[pos].get_child(0)._on_player_enter()
 		
+	theme_name.text = theme
 	print_debug("Room finished loading ", pos)
 	emit_signal("loading_finished", pos)
 	loaded_rooms[pos] = true

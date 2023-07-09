@@ -100,6 +100,8 @@ autoplay = true
 
 [node name="MusicGenerator" type="Node" parent="AudioStreamPlayer"]
 script = ExtResource("5_qda7y")
+duration = 25.0
+loops = 0
 
 [node name="DoorPX" parent="." instance=ExtResource("6_um17j")]
 transform = Transform3D(1, 0, 0, 3.61112e-34, 1, 0, 0, 0, 1, 4, 0, -3.38813e-21)

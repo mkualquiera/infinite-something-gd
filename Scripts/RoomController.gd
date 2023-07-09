@@ -16,13 +16,13 @@ var world: Dictionary
 
 var loading_counter: int = 0
 
-signal on_done_loading(pos)
+signal on_done_loading(pos, theme)
 
 func on_child_done_loading():
 	loading_counter -= 1
 	print_debug("Loading counter ", loading_counter)
 	if loading_counter <= 0:
-		emit_signal("on_done_loading", room_position)
+		emit_signal("on_done_loading", room_position, room_theme)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
