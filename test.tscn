@@ -53,6 +53,18 @@ offset_right = 368.0
 offset_bottom = 1.0
 grow_vertical = 0
 
+[node name="MessageLog" type="TextEdit" parent="."]
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.002
+anchor_right = 1.0
+anchor_bottom = 1.002
+offset_left = -352.0
+offset_top = -137.296
+offset_bottom = -1.29608
+editable = false
+wrap_mode = 1
+
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(0.522, 0, 0, 0, 0.522, 0, 0, 0, 0.522, 0, 0.26315, 0)
 motion_mode = 1

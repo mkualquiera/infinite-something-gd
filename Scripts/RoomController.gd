@@ -17,6 +17,7 @@ var world: Dictionary
 var loading_counter: int = 0
 
 signal on_done_loading(pos)
+signal show_message(message)
 
 func on_child_done_loading():
 	loading_counter -= 1
@@ -238,7 +239,7 @@ func do_interaction(object: ObjectController, interaction, arguments):
 	
 	var body = (await http_request.request_completed)[3]
 	var json = body.get_string_from_utf8()
-	var data: Dictionary = JSON.parse_string(json)
+	var data = JSON.parse_string(json)
 	if data == null:
 		await do_interaction(object, interaction, arguments)
 		return
@@ -262,6 +263,7 @@ func do_interaction(object: ObjectController, interaction, arguments):
 		if data["display_messages"] is Array:
 			for message in data["display_messages"]:
 				print(message["message"])
+				emit_signal("show_message",message["message"])
 			
 	var update_queue = []		
 	

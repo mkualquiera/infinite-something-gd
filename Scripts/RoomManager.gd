@@ -11,6 +11,7 @@ var theme_queue: Array[String]
 var is_loading: bool = true
 var loaded_first_level = false
 @export var loading_screen: Control
+@onready var message_log = $MessageLog
 
 signal loading_finished(pos: Vector2i)
 
@@ -95,5 +96,9 @@ func instantiate_room(theme: String, pos: Vector2i):
 	controller.room_position = pos
 	controller.room_theme = theme
 	controller.connect("on_done_loading", _loading_finished)
+	controller.connect("show_message", add_message)
 	add_child(instantiated)
 	return instantiated
+
+func add_message(message):
+	message_log.text = message + "\n" + message_log.text
