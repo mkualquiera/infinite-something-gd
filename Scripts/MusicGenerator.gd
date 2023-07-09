@@ -52,5 +52,7 @@ func _http_request_completed(result, response_code, headers, body):
 		audio_player.stream = audio_stream
 	else:
 		print("Audio fail", result, "and", response_code)
+		do_load()
+		return
 		
 	emit_signal("done_loading")
