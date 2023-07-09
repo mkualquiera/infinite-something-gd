@@ -11,14 +11,11 @@ material = SubResource("StandardMaterial3D_mc0wt")
 [sub_resource type="BoxShape3D" id="BoxShape3D_va8yk"]
 
 [node name="MeshInstance3D" type="MeshInstance3D"]
-transform = Transform3D(0.36, 0, 0, 0, -1.57361e-08, 0.36, 0, -0.36, -1.57361e-08, 0, 0.182675, 0)
+transform = Transform3D(0.36, 0, 0, 0, -1.57361e-08, 0.36, 0, -0.36, -1.57361e-08, 0, 0.28, 0)
 mesh = SubResource("BoxMesh_gljbj")
 
 [node name="ObjectController" type="Node3D" parent="."]
 script = ExtResource("1_dmgdo")
-obj_name = null
-metadata = null
-interactions = null
 
 [node name="MeshGenerator" type="Node" parent="."]
 script = ExtResource("2_5yx38")
@@ -26,5 +23,5 @@ script = ExtResource("2_5yx38")
 [node name="Area3D" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, -7.10543e-15, 0, 7.10543e-15, 1, 0, -2.27788e-08, 0.521117)
+transform = Transform3D(1, 0, 0, 0, 1, -7.10543e-15, 0, 7.10543e-15, 1, 0, 0, 0.5)
 shape = SubResource("BoxShape3D_va8yk")

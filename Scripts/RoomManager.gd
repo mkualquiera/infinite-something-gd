@@ -8,6 +8,8 @@ var room_scene = preload("res://Scenes/room.tscn")
 @export var grid_size: int = 20
 var room_queue: Array[Vector2i]
 var is_loading: bool = true
+var loaded_first_level = false
+@export var loading_screen: Control
 
 signal loading_finished(pos: Vector2i)
 
@@ -36,12 +38,17 @@ func enable_neighboring_doors(pos):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var core_room = instantiate_room(Vector2i(0,0))
-	core_room.get_child(0)._on_player_enter()
+
 	
 func enqueue_room(pos: Vector2i):
 	room_queue.append(pos)
 
 func _loading_finished(pos: Vector2i):
+	if !loaded_first_level:
+		loaded_first_level = true
+		loading_screen.hide()
+		rooms[pos].get_child(0)._on_player_enter()
+		
 	print_debug("Room finished loading ", pos)
 	emit_signal("loading_finished", pos)
 	loaded_rooms[pos] = true

@@ -89,6 +89,7 @@ func do_interaction(index, arguments):
 	print_debug("Doing interaction")
 	room_controller.do_interaction(self, interactions[index], arguments)
 	
+	
 func destroy():
 	get_parent().queue_free()
 	

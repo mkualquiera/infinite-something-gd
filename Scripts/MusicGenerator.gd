@@ -40,6 +40,8 @@ func _http_request_completed(result, response_code, headers, body):
 		audio_stream.data = decoded_audio_data
 		audio_stream.mix_rate = 32000
 		audio_stream.format = AudioStreamWAV.FORMAT_8_BITS
+		audio_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		audio_stream.loop_end = len(decoded_audio_data)
 		
 		#var audio_sample = AudioStreamPlayer.new()
 		#add_child(audio_sample)

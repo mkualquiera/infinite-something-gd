@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dbufk2qqvrxh5"]
+[gd_scene load_steps=12 format=3 uid="uid://dbufk2qqvrxh5"]
 
 [ext_resource type="Script" path="res://Scripts/RoomManager.gd" id="1_ji7bp"]
 [ext_resource type="Script" path="res://Scripts/CameraFollow.gd" id="2_sgtnk"]
@@ -18,9 +18,13 @@ albedo_color = Color(1, 0.317647, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_y6i7o"]
 
-[node name="Node3D" type="Node3D" node_paths=PackedStringArray("player")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_blcy3"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("player", "loading_screen")]
 script = ExtResource("1_ji7bp")
 player = NodePath("Player")
+loading_screen = NodePath("Panel2")
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 2.4812, 1.8361, 2.44897)
@@ -105,6 +109,26 @@ offset_right = -496.0
 offset_bottom = 344.0
 grow_horizontal = 2
 text = "Submit"
+
+[node name="Panel2" type="Panel" parent="."]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_blcy3")
+
+[node name="Label" type="Label" parent="Panel2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Generating first room.
+Please be patient, this might take a while..."
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="on_questions_answered" from="Panel" to="Camera3D/ObjectSelector" method="on_questions_answered"]
 [connection signal="button_up" from="Panel/Button" to="Panel" method="update_questions"]

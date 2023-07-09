@@ -5,6 +5,7 @@ class_name DoorController
 @export var offset: Vector2i
 @export var grid_size: float = 20
 @export var enabled = false
+@onready var particle_gen = $GPUParticles3D
 
 signal on_door_crossed(offset)
 
@@ -12,9 +13,11 @@ signal on_door_crossed(offset)
 func _ready():
 	connect("area_entered", _area_entered)
 	connect("area_exited", _area_exited)
+	particle_gen.emitting = false
 
 func set_enabled(_enabled):
 	enabled = _enabled
+	particle_gen.emitting = enabled
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

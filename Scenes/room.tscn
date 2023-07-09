@@ -34,15 +34,15 @@ door_nx = NodePath("DoorNX")
 door_pz = NodePath("DoorPZ")
 door_nz = NodePath("DoorNZ")
 
-[node name="RoomController" type="NavigationRegion3D" parent="." node_paths=PackedStringArray("floor", "l_wall", "music_gen")]
+[node name="RoomController" type="NavigationRegion3D" parent="." node_paths=PackedStringArray("floor", "l_wall", "music_gen", "audio")]
 transform = Transform3D(1, 3.13716e-22, 7.10543e-15, -2.75726e-22, 1, 1.42109e-14, -7.10543e-15, 1.51583e-28, 1, 0, -0.276, 0)
 navigation_mesh = SubResource("NavigationMesh_qtd14")
 script = ExtResource("3_htjng")
-room_theme = "A videogame with the theme: Candyland"
 load_on_ready = true
 floor = NodePath("../Floor")
 l_wall = NodePath("../LeftWall")
 music_gen = NodePath("../AudioStreamPlayer/MusicGenerator")
+audio = NodePath("../AudioStreamPlayer")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(-9, 1.35896e-06, 1.97083e-14, 2.17935e-20, -3.93402e-07, 2.986, 1.35896e-06, 9, 1.30522e-07, -0.005, 0.011, 0)

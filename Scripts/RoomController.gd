@@ -1,7 +1,7 @@
-extends Node
+extends Node3D
 class_name RoomController
 
-@export var room_theme = "A videogame with the theme: Underwater"
+@export var room_theme = "A videogame with the theme: Jungle"
 @export var load_on_ready = false
 @export var floor: MeshInstance3D
 @export var l_wall: MeshInstance3D
@@ -11,6 +11,7 @@ class_name RoomController
 @export var room_position: Vector2i
 var controllers: Array[ObjectController]
 var world: Dictionary
+@export var audio: AudioStreamPlayer
 
 var loading_counter: int = 0
 
@@ -220,7 +221,6 @@ func _create_object(object, add=true):
 	var z = randf_range(-area_z + obj_padding, area_z - obj_padding)
 	room_obj.position.x = x
 	room_obj.position.z = z
-	room_obj.position.y = floor.position.y
 	
 	if add:
 		world["objects"].append(object)
@@ -233,6 +233,7 @@ func _on_player_enter():
 	room_manager.enqueue_room(room_position + Vector2i(0,1))
 	room_manager.enqueue_room(room_position + Vector2i(-1,0))
 	room_manager.enqueue_room(room_position + Vector2i(0,-1))
+	audio.play(0)
 	
 func _on_player_leave():
-	pass
+	audio.stop()
