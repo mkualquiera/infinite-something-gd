@@ -23,10 +23,11 @@ albedo_color = Color(1, 0.317647, 1, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_blcy3"]
 bg_color = Color(0, 0, 0, 1)
 
-[node name="Node3D" type="Node3D" node_paths=PackedStringArray("player", "loading_screen")]
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("player", "loading_screen", "theme_name")]
 script = ExtResource("1_ji7bp")
 player = NodePath("Player")
 loading_screen = NodePath("Panel2")
+theme_name = NodePath("ThemeName")
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("player")]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.5, -0.707107, -0.353553, 0.612373, 2.4812, 1.8361, 2.44897)

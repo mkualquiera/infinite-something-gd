@@ -32,8 +32,9 @@ func do_load():
 		print("Audio request failed")
 
 func _http_request_completed(result, response_code, headers, body):
-	if result == OK and response_code == 200:
-		var audio_data = JSON.parse_string(body.get_string_from_utf8())["audio"]
+	var data = JSON.parse_string(body.get_string_from_utf8())
+	if data != null:
+		var audio_data = data["audio"]
 		var decoded_audio_data = Marshalls.base64_to_raw(audio_data)
 			
 		var audio_stream = AudioStreamWAV.new()
