@@ -11,6 +11,8 @@ func _ready():
 		do_load()
 
 func do_load():
+	return
+	
 	# Create an HTTP request node and connect its completion signal.
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
