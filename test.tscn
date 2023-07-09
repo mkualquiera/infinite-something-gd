@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/RoomManager.gd" id="1_ji7bp"]
 [ext_resource type="Script" path="res://Scripts/CameraFollow.gd" id="2_sgtnk"]
 [ext_resource type="Script" path="res://Scripts/ObjectSelector.gd" id="4_472rn"]
-[ext_resource type="Script" path="res://Scripts/PrefChanger.gd" id="6_7j8ua"]
+[ext_resource type="PackedScene" uid="uid://biwp7w1s3xueg" path="res://Scenes/url_editor.tscn" id="4_s30am"]
 [ext_resource type="Script" path="res://Scripts/PlayerMover.gd" id="8_edel6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w75n3"]
@@ -46,29 +46,7 @@ offset_right = 368.0
 offset_bottom = 1.0
 grow_vertical = 0
 
-[node name="URLEditor" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 100.0
-offset_bottom = 35.0
-script = ExtResource("6_7j8ua")
-
-[node name="TextEdit" type="TextEdit" parent="URLEditor"]
-layout_mode = 2
-offset_left = 15.0
-offset_top = 8.0
-offset_right = 469.0
-offset_bottom = 43.0
-text = "ghtyhyt"
-scroll_fit_content_height = true
-
-[node name="Button" type="Button" parent="URLEditor"]
-layout_mode = 2
-offset_left = 479.0
-offset_top = 9.0
-offset_right = 526.0
-offset_bottom = 45.0
-text = "save"
+[node name="URLEditor" parent="." instance=ExtResource("4_s30am")]
 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(0.522, 0, 0, 0, 0.522, 0, 0, 0, 0.522, 0, 0.291, 0)

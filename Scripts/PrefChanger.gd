@@ -17,5 +17,9 @@ func update_button():
 
 
 func update_pref():
-	PlayerPrefs.set_pref(pref_name, text_box.text)
+	var text: String = text_box.text
+	if text.ends_with("/"):
+		text = text.substr(0, len(text) - 1)
+	PlayerPrefs.set_pref(pref_name, text)
+	text_box.text = text
 	update_button()

@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://dkw5h7fbg7df2"]
+
+[ext_resource type="Script" path="res://Scripts/EnvironmentGenerator.gd" id="1_5wcmq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x1gf2"]
+albedo_color = Color(0.447059, 0.745098, 0.847059, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_54rt8"]
+material = SubResource("StandardMaterial3D_x1gf2")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_13dvi"]
+albedo_color = Color(0.72549, 0.462745, 0.768627, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w6xdr"]
+material = SubResource("StandardMaterial3D_13dvi")
+
+[sub_resource type="Sky" id="Sky_1vifg"]
+
+[sub_resource type="Environment" id="Environment_ek713"]
+background_mode = 1
+background_color = Color(0.752941, 0.592157, 0.419608, 1)
+sky = SubResource("Sky_1vifg")
+sky_rotation = Vector3(0.671952, 5.25519, 4.93754)
+adjustment_enabled = true
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_54rt8")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.44069)
+mesh = SubResource("BoxMesh_w6xdr")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 1, 1.46861)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ek713")
+script = ExtResource("1_5wcmq")
+load_on_ready = true
