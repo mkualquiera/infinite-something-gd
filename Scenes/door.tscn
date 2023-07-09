@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://1o1c7km8amq3"]
+
+[ext_resource type="Script" path="res://Scripts/DoorController.gd" id="1_q7i65"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m8d6i"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o5dhk"]
+albedo_color = Color(0.690196, 0.337255, 0.462745, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ar34o"]
+particle_flag_rotate_y = true
+direction = Vector3(0, 1, 0)
+spread = 22.62
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.57
+initial_velocity_max = 2.63
+angular_velocity_min = -3.49
+angular_velocity_max = 22.87
+angle_min = -39.3
+angle_max = 179.2
+hue_variation_min = -0.64
+hue_variation_max = 0.22
+
+[sub_resource type="BoxMesh" id="BoxMesh_vh4wn"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="Area3D" type="Area3D"]
+transform = Transform3D(1, -1.0776e-42, 0, 3.61112e-34, 1, 0, 0, 0, 1, -2.78547e-14, -5.68434e-14, -3.92019)
+input_ray_pickable = false
+script = ExtResource("1_q7i65")
+offset = Vector2i(0, -1)
+enabled = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, -1.0776e-42, 0, 3.61112e-34, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_m8d6i")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, -1.0776e-42, 0, 3.61112e-34, 1, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_o5dhk")
+lifetime = 0.56
+speed_scale = 0.63
+process_material = SubResource("ParticleProcessMaterial_ar34o")
+draw_pass_1 = SubResource("BoxMesh_vh4wn")

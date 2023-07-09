@@ -231,3 +231,5 @@ func _on_player_enter():
 	room_manager.enqueue_room(room_position + Vector2i(-1,0))
 	room_manager.enqueue_room(room_position + Vector2i(0,-1))
 	
+func _on_player_leave():
+	pass

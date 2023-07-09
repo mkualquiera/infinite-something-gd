@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dbufk2qqvrxh5"]
+[gd_scene load_steps=11 format=3 uid="uid://dbufk2qqvrxh5"]
 
 [ext_resource type="Script" path="res://Scripts/RoomManager.gd" id="1_ji7bp"]
 [ext_resource type="Script" path="res://Scripts/CameraFollow.gd" id="2_sgtnk"]
@@ -15,6 +15,8 @@ material = SubResource("StandardMaterial3D_mc0wt")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gat1o"]
 albedo_color = Color(1, 0.317647, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y6i7o"]
 
 [node name="Node3D" type="Node3D" node_paths=PackedStringArray("player")]
 script = ExtResource("1_ji7bp")
@@ -39,22 +41,10 @@ transform = Transform3D(1, 0, 0, 0, 0.58616, 0.810195, 0, -0.810195, 0.58616, 0,
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -264.0
-offset_right = 448.0
+offset_top = -128.0
+offset_right = 368.0
 offset_bottom = 1.0
 grow_vertical = 0
-item_count = 11
-item_0/text = "adasasd"
-item_1/text = "fsdsdfdfs"
-item_2/text = "sfdsdfsdf"
-item_3/text = "asd"
-item_4/text = "ads"
-item_5/text = "ads"
-item_6/text = "asd"
-item_7/text = "asd"
-item_8/text = "ads"
-item_9/text = "asd"
-item_10/text = "asd"
 
 [node name="URLEditor" type="Control" parent="."]
 layout_mode = 3
@@ -94,6 +84,11 @@ shape = SubResource("BoxShape3D_w75n3")
 mesh = SubResource("BoxMesh_gljbj")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("StandardMaterial3D_gat1o")
+
+[node name="Area3D" type="Area3D" parent="Player"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Area3D"]
+shape = SubResource("BoxShape3D_y6i7o")
 
 [connection signal="text_changed" from="URLEditor/TextEdit" to="URLEditor" method="update_button"]
 [connection signal="pressed" from="URLEditor/Button" to="URLEditor" method="update_pref"]
