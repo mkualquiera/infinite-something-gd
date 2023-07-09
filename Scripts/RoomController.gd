@@ -238,7 +238,7 @@ func do_interaction(object: ObjectController, interaction, arguments):
 	
 	var body = (await http_request.request_completed)[3]
 	var json = body.get_string_from_utf8()
-	var data: Dictionary = JSON.parse_string(json)
+	var data = JSON.parse_string(json)
 	if data == null:
 		await do_interaction(object, interaction, arguments)
 		return
