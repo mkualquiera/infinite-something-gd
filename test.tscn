@@ -67,6 +67,3 @@ surface_material_override/0 = SubResource("StandardMaterial3D_gat1o")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Area3D"]
 shape = SubResource("BoxShape3D_y6i7o")
-
-[connection signal="text_changed" from="URLEditor/TextEdit" to="URLEditor" method="update_button"]
-[connection signal="pressed" from="URLEditor/Button" to="URLEditor" method="update_pref"]

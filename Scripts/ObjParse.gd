@@ -281,7 +281,7 @@ static func _create_obj(obj: String, mats: Dictionary) -> Mesh:
 							var uv = uvs[f]
 							fan_vt.append(uv)
 				st.add_triangle_fan(fan_v, fan_vt, fan_c, PackedVector2Array(), fan_vn, [])
-		st.generate_normals()
+		st.generate_normals(false)
 		mesh = st.commit(mesh)
 	
 	for k in mesh.get_surface_count():
