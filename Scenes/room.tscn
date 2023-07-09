@@ -1,11 +1,12 @@
-[gd_scene load_steps=13 format=3 uid="uid://cpeev13kyomwl"]
+[gd_scene load_steps=14 format=3 uid="uid://cpeev13kyomwl"]
 
 [ext_resource type="Script" path="res://Scripts/RoomLoader.gd" id="1_vpq05"]
 [ext_resource type="Texture2D" uid="uid://bx01i2fg5yumw" path="res://icon.svg" id="1_yta44"]
+[ext_resource type="Script" path="res://Scripts/RoomController.gd" id="2_2mrwa"]
 [ext_resource type="PackedScene" uid="uid://c1356mhr7g72v" path="res://Scenes/texture_generator.tscn" id="2_hdnr2"]
-[ext_resource type="Script" path="res://Scripts/RoomController.gd" id="3_htjng"]
 [ext_resource type="Script" path="res://Scripts/MusicGenerator.gd" id="5_qda7y"]
 [ext_resource type="PackedScene" uid="uid://1o1c7km8amq3" path="res://Scenes/door.tscn" id="6_um17j"]
+[ext_resource type="PackedScene" uid="uid://dprxpgcracfhb" path="res://Scenes/env_generator.tscn" id="7_1rd17"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_qtd14"]
 vertices = PackedVector3Array(0.25, 0.5, 4.5, 0.25, 0.5, 1.5, -0.75, 0.5, 1.25, -4.5, 0.5, 4.5, -0.75, 0.5, 0.25, 0.25, 0.5, 0, 0.25, 0.5, -4.5, -0.75, 0.5, 0.25, 0.25, 0.5, -4.5, -4.5, 0.5, -4.5, -4.5, 0.5, 4.5, -4.5, 0.5, 4.5, -0.75, 0.5, 1.25, -0.75, 0.5, 0.25, 1, 0.5, 1.25, 0.25, 0.5, 1.5, 0.25, 0.5, 4.5, 4.5, 0.5, 4.5, 1, 0.5, 0.25, 4.5, 0.5, 4.5, 4.5, 0.5, -4.5, 0.25, 0.5, -4.5, 0.25, 0.5, -4.5, 0.25, 0.5, 0, 1, 0.5, 0.25, 1, 0.5, 0.25, 1, 0.5, 1.25, 4.5, 0.5, 4.5)
@@ -34,15 +35,16 @@ door_nx = NodePath("DoorNX")
 door_pz = NodePath("DoorPZ")
 door_nz = NodePath("DoorNZ")
 
-[node name="RoomController" type="NavigationRegion3D" parent="." node_paths=PackedStringArray("floor", "l_wall", "music_gen", "audio")]
+[node name="RoomController" type="NavigationRegion3D" parent="." node_paths=PackedStringArray("floor", "l_wall", "music_gen", "audio", "env_generator")]
 transform = Transform3D(1, 3.13716e-22, 7.10543e-15, -2.75726e-22, 1, 1.42109e-14, -7.10543e-15, 1.51583e-28, 1, 0, -0.276, 0)
 navigation_mesh = SubResource("NavigationMesh_qtd14")
-script = ExtResource("3_htjng")
+script = ExtResource("2_2mrwa")
 load_on_ready = true
 floor = NodePath("../Floor")
 l_wall = NodePath("../LeftWall")
 music_gen = NodePath("../AudioStreamPlayer/MusicGenerator")
 audio = NodePath("../AudioStreamPlayer")
+env_generator = NodePath("../env_generator")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(-9, 1.35896e-06, 1.97083e-14, 2.17935e-20, -3.93402e-07, 2.986, 1.35896e-06, 9, 1.30522e-07, -0.005, 0.011, 0)
@@ -100,22 +102,25 @@ autoplay = true
 script = ExtResource("5_qda7y")
 
 [node name="DoorPX" parent="." instance=ExtResource("6_um17j")]
-transform = Transform3D(1, -1.0776e-42, 0, 3.61112e-34, 1, 0, 0, 0, 1, 4, 0, -3.38813e-21)
+transform = Transform3D(1, 0, 0, 3.61112e-34, 1, 0, 0, 0, 1, 4, 0, -3.38813e-21)
 offset = Vector2i(1, 0)
 enabled = false
 
 [node name="DoorNX" parent="." instance=ExtResource("6_um17j")]
-transform = Transform3D(1, -1.0776e-42, 0, 3.61112e-34, 1, 0, 0, 0, 1, -4, 0, 0)
+transform = Transform3D(1, 0, 0, 3.61112e-34, 1, 0, 0, 0, 1, -4, 0, 0)
 offset = Vector2i(-1, 0)
 enabled = false
 
 [node name="DoorPZ" parent="." instance=ExtResource("6_um17j")]
-transform = Transform3D(1, -1.0776e-42, 0, 3.61112e-34, 1, 0, 0, 0, 1, -4.41295e-28, 0, 4)
+transform = Transform3D(1, 0, 0, 3.61112e-34, 1, 0, 0, 0, 1, -4.41295e-28, 0, 4)
 offset = Vector2i(0, 1)
 enabled = false
 
 [node name="DoorNZ" parent="." instance=ExtResource("6_um17j")]
-transform = Transform3D(1, -1.0776e-42, 0, 3.61112e-34, 1, 0, 0, 0, 1, -4.41295e-28, 0, -4)
+transform = Transform3D(1, 0, 0, 3.61112e-34, 1, 0, 0, 0, 1, -4.41295e-28, 0, -4)
 enabled = false
+
+[node name="env_generator" parent="." instance=ExtResource("7_1rd17")]
+load_on_ready = false
 
 [connection signal="input_event" from="Floor/StaticBody3D" to="." method="input_event_daisy"]

@@ -63,7 +63,6 @@ func update_rendering(world):
 	loading_counter += 1
 
 func _on_prompt_generated(result, response_code, headers, body):
-	
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
 	
@@ -76,10 +75,10 @@ func _on_prompt_generated(result, response_code, headers, body):
 	texture_generator.do_load()
 
 func _on_interactions_generated(result, response_code, headers, body):
-	
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
-	
+	if data == null:
+		print(json)
 	interactions = data["interactions"]
 	on_child_done_loading()
 	print_debug(interactions)

@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dprxpgcracfhb"]
+
+[ext_resource type="Script" path="res://Scripts/EnvironmentGenerator.gd" id="1_p3621"]
+
+[sub_resource type="Sky" id="Sky_1vifg"]
+
+[sub_resource type="Environment" id="Environment_ek713"]
+background_mode = 1
+background_energy_multiplier = 1.51
+sky = SubResource("Sky_1vifg")
+sky_rotation = Vector3(0.671952, 5.25519, 4.93754)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+adjustment_enabled = true
+
+[node name="env_generator" type="WorldEnvironment"]
+environment = SubResource("Environment_ek713")
+script = ExtResource("1_p3621")
+load_on_ready = true

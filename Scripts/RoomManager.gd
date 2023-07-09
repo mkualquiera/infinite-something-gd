@@ -7,6 +7,7 @@ var room_scene = preload("res://Scenes/room.tscn")
 @export var player: CharacterBody3D 
 @export var grid_size: int = 20
 var room_queue: Array[Vector2i]
+var theme_queue: Array[String]
 var is_loading: bool = true
 var loaded_first_level = false
 @export var loading_screen: Control
@@ -37,11 +38,22 @@ func enable_neighboring_doors(pos):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var core_room = instantiate_room(Vector2i(0,0))
+	var core_room = instantiate_room("Hub", Vector2i(0,0))
 
 	
 func enqueue_room(pos: Vector2i):
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+	var inference_url = PlayerPrefs.get_pref("inference_url")
+	var error = http_request.request(inference_url + "/gen_theme", [], HTTPClient.METHOD_GET)
+	if error != OK:
+		push_error("An error occurred in the HTTP request.")
+	var body = (await http_request.request_completed)[3]
+	var json = body.get_string_from_utf8()
+	var theme = JSON.parse_string(json)["theme"]
+	print_debug("Room ", pos, " Theme: ", theme)
 	room_queue.append(pos)
+	theme_queue.append(theme)
 
 func _loading_finished(pos: Vector2i):
 	if !loaded_first_level:
@@ -62,9 +74,9 @@ func _process(delta):
 func load_next():
 	var next_room = room_queue.pop_back()
 	if next_room:
-		instantiate_room(next_room)
+		instantiate_room(theme_queue.pop_back(), next_room)
 	
-func instantiate_room(pos: Vector2i):
+func instantiate_room(theme: String, pos: Vector2i):
 	if rooms.has(pos):
 		return null
 		
@@ -79,6 +91,7 @@ func instantiate_room(pos: Vector2i):
 	var controller: RoomController = instantiated.get_child(0)
 	controller.room_manager = self
 	controller.room_position = pos
+	controller.room_theme = theme
 	controller.connect("on_done_loading", _loading_finished)
 	add_child(instantiated)
 	return instantiated

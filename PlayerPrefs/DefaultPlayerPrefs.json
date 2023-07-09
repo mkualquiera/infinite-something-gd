@@ -1,3 +1,5 @@
 {
-	"inference_url": "http://127.0.0.1:8000"
+	"inference_url": "http://127.0.0.1:8000",
+	"oai_key": "",
+	"use_oai": false
 }

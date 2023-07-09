@@ -39,6 +39,7 @@ func do_load():
 func _http_request_completed(result, response_code, headers, body):
 	var json = JSON.parse_string(body.get_string_from_utf8())
 	if json == null:
+		do_load()
 		return
 	var obj = json["obj"]
 	

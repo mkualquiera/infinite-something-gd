@@ -37,6 +37,9 @@ func do_load():
 func _http_request_completed(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
 	json = JSON.parse_string(json)
+	if json == null:
+		do_load()
+		return
 	var img = json["lut"]
 	colors = json["colors"]
 	
@@ -54,6 +57,5 @@ func _http_request_completed(result, response_code, headers, body):
 		img_cut.blit_rect(image, Rect2i(i, 0, 17, 17), Vector2i.ZERO)
 		images.append(img_cut)
 	texture.create(Image.FORMAT_RGB8, 17, 17, 17, false, Array(images))
-	print(texture.get_data())
 
 	environment.adjustment_color_correction = texture

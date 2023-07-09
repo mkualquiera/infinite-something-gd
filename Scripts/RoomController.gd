@@ -12,6 +12,7 @@ class_name RoomController
 var controllers: Array[ObjectController]
 var world: Dictionary
 @export var audio: AudioStreamPlayer
+@export var env_generator: EnvironmentGenerator
 
 var loading_counter: int = 0
 
@@ -81,14 +82,33 @@ func load_room():
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
 	
-	loading_counter += 1
-	music_gen.connect("done_loading",on_child_done_loading)
-	music_gen.do_load()
-	
+	env_generator.environment_description = room_theme
+	env_generator.do_load()
 		
 func _on_room_texture_prompts_generated(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
+	
+	if data == null:
+		print("Retrying room texture generation")
+		# Create an HTTP request node and connect its completion signal.
+		var http_request = HTTPRequest.new()
+		add_child(http_request)
+		http_request.connect("request_completed", _on_room_texture_prompts_generated)
+
+		var request_data = {
+			"world_desc": room_theme
+		}
+		
+		var json_request = JSON.stringify(request_data)
+
+		# Perform the HTTP request. The URL below returns a PNG image as of writing.
+		var inference_url = PlayerPrefs.get_pref("inference_url")
+		var error = http_request.request(inference_url + "/gen_room_textures", [], 
+			HTTPClient.METHOD_POST, json_request)
+		if error != OK:
+			push_error("An error occurred in the HTTP request.")
+		return
 	
 	var floor_gen: TextureGenerator = floor.get_child(0)
 	floor_gen.texture_description = data["floor_texture"]
@@ -112,6 +132,42 @@ var room_obj_scene = preload("res://Scenes/room_object.tscn")
 func _on_room_generated(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
+	if data == null:
+		print("Retrying room generation")
+		# Create an HTTP request node and connect its completion signal.
+		var http_request = HTTPRequest.new()
+		add_child(http_request)
+		http_request.connect("request_completed", _on_room_generated)
+		
+		#var request_data = {
+		#	"text": texture_description + " texture, vfx asset,"+
+		#	" texture of \"" + texture_description + "\" trending on artstation, 4K",
+		#	"sampler": "sample_dpmpp_2m"
+		#}
+		var request_data = {
+			"world_desc": room_theme,
+			"cond": {
+				"objects": [
+					{
+						"name": "player",
+						"metadata": {
+							"health": 100,
+							"inventory": []
+						}
+					}
+				]
+			}
+		}
+		
+		var json_request = JSON.stringify(request_data)
+
+		# Perform the HTTP request. The URL below returns a PNG image as of writing.
+		var inference_url = PlayerPrefs.get_pref("inference_url")
+		var error = http_request.request(inference_url + "/gen_world", [], 
+			HTTPClient.METHOD_POST, json_request)
+		if error != OK:
+			push_error("An error occurred in the HTTP request.")
+		return
 	world = data
 	
 	for object in data["objects"]:
@@ -120,12 +176,36 @@ func _on_room_generated(result, response_code, headers, body):
 		controllers.append(controller)
 		controller.update_rendering(data)		
 		controller.connect("on_done_loading", on_child_done_loading)
+	
+	# Create an HTTP request node and connect its completion signal.
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+
+	var request_data = {
+		"world": world
+	}
+	
+	var json_request = JSON.stringify(request_data)
+
+	# Perform the HTTP request. The URL below returns a music prompt at the time of writing.
+	var inference_url = PlayerPrefs.get_pref("inference_url")
+	var error = http_request.request(inference_url + "/music_prompt", [], 
+		HTTPClient.METHOD_POST, json_request)
+	if error != OK:
+		push_error("An error occurred in the HTTP request.")
+	body = (await http_request.request_completed)[3]
+	json = body.get_string_from_utf8()
+	var music_prompt = JSON.parse_string(json)["prompt"]
+	print_debug("Music prompt: ", music_prompt)
+	loading_counter += 1
+	music_gen.connect("done_loading",on_child_done_loading)
+	music_gen.music_description = music_prompt
+	music_gen.do_load()
 
 func do_interaction(object: ObjectController, interaction, arguments):
 	# Create an HTTP request node and connect its completion signal.
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
-	http_request.connect("request_completed", _on_interaction_completed)
 	
 	var new_interaction = interaction.duplicate()
 	new_interaction.arguments = arguments
@@ -148,19 +228,21 @@ func do_interaction(object: ObjectController, interaction, arguments):
 		HTTPClient.METHOD_POST, json_request)
 	if error != OK:
 		push_error("An error occurred in the HTTP request.")
-		
-func _on_interaction_completed(result, response_code, headers, body):
 	
+	var body = (await http_request.request_completed)[3]
 	var json = body.get_string_from_utf8()
 	var data: Dictionary = JSON.parse_string(json)
+	if data == null:
+		await do_interaction(object, interaction, arguments)
+		return
 	
 	if data.has("delete_objects"):
 		if data["delete_objects"] is Array:
 			for to_delete in data["delete_objects"]:
 				var objects: Array = world["objects"]
 				var counter = 0
-				for object in objects:
-					if object["name"] == to_delete["name"]:
+				for obj in objects:
+					if obj["name"] == to_delete["name"]:
 						var controller: ObjectController = controllers[counter]
 						controller.destroy()
 						controllers.remove_at(counter)
@@ -178,23 +260,23 @@ func _on_interaction_completed(result, response_code, headers, body):
 	
 	if data.has("create_objects"):
 		if data["create_objects"] is Array:
-			for object in data["create_objects"]:
-				var controller = _create_object(object)
+			for obj in data["create_objects"]:
+				var controller = _create_object(obj)
 				controllers.append(controller)
 				update_queue.append(controller)
-				world["objects"].append(object)
+				world["objects"].append(obj)
 
 	if data.has("overwrite_metadata"):
 		if data["overwrite_metadata"] is Array:
 			for update_metadata in data["overwrite_metadata"]:
 				var objects: Array = world["objects"]
 				var counter = 0
-				for object in objects:
-					if object["name"] == update_metadata["name"]:
+				for obj in objects:
+					if obj["name"] == update_metadata["name"]:
 						for key in update_metadata["metadata"].keys():
-							object["metadata"][key] = update_metadata["metadata"][key]
+							obj["metadata"][key] = update_metadata["metadata"][key]
 						var controller: ObjectController = controllers[counter]
-						controller.metadata = object["metadata"]
+						controller.metadata = obj["metadata"]
 						update_queue.append(controller)
 						
 					counter += 1 

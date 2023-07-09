@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bm2jbd7l56co0"]
+[gd_scene load_steps=4 format=3 uid="uid://bm2jbd7l56co0"]
 
 [ext_resource type="PackedScene" uid="uid://biwp7w1s3xueg" path="res://Scenes/url_editor.tscn" id="1_eeewt"]
 [ext_resource type="Script" path="res://Scripts/Menu.gd" id="2_1vpug"]
+[ext_resource type="PackedScene" uid="uid://c38wxsxf8fj2b" path="res://Scenes/key_editor.tscn" id="3_48mbt"]
 
 [node name="title" type="Control"]
 layout_mode = 3
@@ -10,6 +11,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
@@ -21,9 +31,19 @@ offset_right = 227.5
 offset_bottom = 99.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 26
-text = "a game with ai generated gameplay"
+text = "infinite something
+"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Play" type="Button" parent="."]
+layout_mode = 2
+offset_left = 322.0
+offset_top = 420.0
+offset_right = 831.0
+offset_bottom = 451.0
+text = "play"
+script = ExtResource("2_1vpug")
 
 [node name="UI" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -32,10 +52,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -254.5
-offset_top = -49.0
-offset_right = 254.5
-offset_bottom = 49.0
+offset_left = -254.0
+offset_top = -104.0
+offset_right = 255.0
+offset_bottom = -9.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -43,9 +63,7 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Play" type="Button" parent="UI"]
+[node name="KeyEditor" parent="UI" instance=ExtResource("3_48mbt")]
 layout_mode = 2
-text = "play"
-script = ExtResource("2_1vpug")
 
-[connection signal="pressed" from="UI/Play" to="UI/Play" method="open_game"]
+[connection signal="pressed" from="Play" to="Play" method="open_game"]

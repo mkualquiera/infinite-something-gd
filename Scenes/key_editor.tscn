@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://c38wxsxf8fj2b"]
+
+[ext_resource type="Script" path="res://Scripts/KeyChanger.gd" id="1_qfgmw"]
+
+[node name="KeyEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 100.0
+offset_bottom = 35.0
+script = ExtResource("1_qfgmw")
+
+[node name="TextEdit" type="TextEdit" parent="."]
+layout_mode = 2
+offset_top = 58.0
+offset_right = 461.0
+offset_bottom = 93.0
+text = "ghtyhyt"
+scroll_fit_content_height = true
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+offset_left = 462.0
+offset_top = 58.0
+offset_right = 509.0
+offset_bottom = 94.0
+text = "send"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 89.0
+offset_bottom = 58.0
+text = "OpenAI key"
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_top = 1.0
+offset_right = 89.0
+offset_bottom = 27.0
+text = "Use key
+"
+
+[node name="CheckBox" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = 70.0
+offset_right = 94.0
+offset_bottom = 24.0
+
+[connection signal="text_changed" from="TextEdit" to="." method="update_button"]
+[connection signal="pressed" from="Button" to="." method="update_pref"]
+[connection signal="toggled" from="CheckBox" to="." method="update_button_"]
