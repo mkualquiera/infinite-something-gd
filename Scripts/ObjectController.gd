@@ -84,10 +84,10 @@ func _on_interactions_generated(result, response_code, headers, body):
 	on_child_done_loading()
 	print_debug(interactions)
 	
-func do_interaction(index):
+func do_interaction(index, arguments):
 	var room_controller: RoomController = get_parent().get_parent()
 	print_debug("Doing interaction")
-	room_controller.do_interaction(self, interactions[index])
+	room_controller.do_interaction(self, interactions[index], arguments)
 	
 func destroy():
 	get_parent().queue_free()

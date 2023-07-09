@@ -56,8 +56,6 @@ func load_next():
 	var next_room = room_queue.pop_back()
 	if next_room:
 		instantiate_room(next_room)
-	else:
-		print_debug("loading loop died")
 	
 func instantiate_room(pos: Vector2i):
 	if rooms.has(pos):

@@ -16,6 +16,9 @@ mesh = SubResource("BoxMesh_gljbj")
 
 [node name="ObjectController" type="Node3D" parent="."]
 script = ExtResource("1_dmgdo")
+obj_name = null
+metadata = null
+interactions = null
 
 [node name="MeshGenerator" type="Node" parent="."]
 script = ExtResource("2_5yx38")

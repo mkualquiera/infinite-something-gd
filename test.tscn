@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://Scripts/RoomManager.gd" id="1_ji7bp"]
 [ext_resource type="Script" path="res://Scripts/CameraFollow.gd" id="2_sgtnk"]
 [ext_resource type="Script" path="res://Scripts/ObjectSelector.gd" id="4_472rn"]
-[ext_resource type="PackedScene" uid="uid://biwp7w1s3xueg" path="res://Scenes/url_editor.tscn" id="4_s30am"]
+[ext_resource type="Script" path="res://Scripts/ArgumentPrompt.gd" id="5_wcmpm"]
 [ext_resource type="Script" path="res://Scripts/PlayerMover.gd" id="8_edel6"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_w75n3"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_cytyf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mc0wt"]
 
@@ -30,9 +30,10 @@ script = ExtResource("2_sgtnk")
 player = NodePath("../Player")
 strength = 0.05
 
-[node name="ObjectSelector" type="Node" parent="Camera3D" node_paths=PackedStringArray("item_list")]
+[node name="ObjectSelector" type="Node" parent="Camera3D" node_paths=PackedStringArray("item_list", "argument_prompt")]
 script = ExtResource("4_472rn")
 item_list = NodePath("../../ItemList")
+argument_prompt = NodePath("../../Panel")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.58616, 0.810195, 0, -0.810195, 0.58616, 0, 0, 0)
@@ -46,17 +47,15 @@ offset_right = 368.0
 offset_bottom = 1.0
 grow_vertical = 0
 
-[node name="URLEditor" parent="." instance=ExtResource("4_s30am")]
-
 [node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(0.522, 0, 0, 0, 0.522, 0, 0, 0, 0.522, 0, 0.291, 0)
+transform = Transform3D(0.522, 0, 0, 0, 0.522, 0, 0, 0, 0.522, 0, 0.26315, 0)
 motion_mode = 1
 floor_stop_on_slope = false
 floor_block_on_wall = false
 script = ExtResource("8_edel6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
-shape = SubResource("BoxShape3D_w75n3")
+shape = SubResource("BoxShape3D_cytyf")
 
 [node name="Player" type="MeshInstance3D" parent="Player"]
 mesh = SubResource("BoxMesh_gljbj")
@@ -67,3 +66,45 @@ surface_material_override/0 = SubResource("StandardMaterial3D_gat1o")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player/Area3D"]
 shape = SubResource("BoxShape3D_y6i7o")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.002
+offset_bottom = -0.296082
+script = ExtResource("5_wcmpm")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 536.0
+offset_top = 208.0
+offset_right = -538.0
+offset_bottom = 234.0
+text = "Question?"
+horizontal_alignment = 1
+
+[node name="TextEdit" type="TextEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 280.0
+offset_top = 240.0
+offset_right = -280.0
+offset_bottom = 288.0
+placeholder_text = "Answer"
+
+[node name="Button" type="Button" parent="Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 496.0
+offset_top = 304.0
+offset_right = -496.0
+offset_bottom = 344.0
+grow_horizontal = 2
+text = "Submit"
+
+[connection signal="on_questions_answered" from="Panel" to="Camera3D/ObjectSelector" method="on_questions_answered"]
+[connection signal="button_up" from="Panel/Button" to="Panel" method="update_questions"]

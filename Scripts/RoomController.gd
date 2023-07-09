@@ -120,13 +120,16 @@ func _on_room_generated(result, response_code, headers, body):
 		controller.update_rendering(data)		
 		controller.connect("on_done_loading", on_child_done_loading)
 
-func do_interaction(object: ObjectController, interaction):
+func do_interaction(object: ObjectController, interaction, arguments):
 	# Create an HTTP request node and connect its completion signal.
-	print_debug("Doing interaction")
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.connect("request_completed", _on_interaction_completed)
 	
+	var new_interaction = interaction.duplicate()
+	new_interaction.arguments = arguments
+
+	print_debug("Doing interaction ", new_interaction)
 
 	var request_data = {
 		"world": world,
@@ -134,7 +137,7 @@ func do_interaction(object: ObjectController, interaction):
 			"name": object.obj_name,
 			"metadata": object.metadata
 		}, 
-		"interaction": interaction
+		"interaction": new_interaction
 	}
 	
 	var json_request = JSON.stringify(request_data)

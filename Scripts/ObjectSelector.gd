@@ -3,6 +3,9 @@ extends Node
 var camera
 @export var item_list: ItemList
 var current_controller: ObjectController
+var all_arguments: Array
+var selected_interaction: int
+@export var argument_prompt: ArgumentPrompt
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -38,14 +41,24 @@ func _input(event: InputEvent):
 						var controller: ObjectController = first_child
 						#print_debug(controller.interactions)
 						current_controller = controller
+						all_arguments = []
 						item_list.clear()
 						for interaction in controller.interactions:
 							item_list.add_item(interaction.display_name)
+							all_arguments.append(interaction.arguments)
+						
 						get_parent().get_parent().find_child("Player").set_movement_target(controller.global_position)
 
 func _on_item_selected(index: int):
 	if current_controller != null:
 		item_list.clear()
-		print_debug("Doing interaction")
-		current_controller.do_interaction(index)
-		current_controller = null
+		argument_prompt.ask_questions(all_arguments[index])
+		selected_interaction = index
+		#print_debug("Doing interaction")
+		#current_controller.do_interaction(index)
+		#current_controller = null
+		
+func on_questions_answered(answers):
+	print_debug("Doing interaction")
+	current_controller.do_interaction(selected_interaction, answers)
+	current_controller = null

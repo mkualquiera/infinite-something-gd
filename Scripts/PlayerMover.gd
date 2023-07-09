@@ -4,7 +4,6 @@ class_name PlayerMover
 var movement_speed: float = 2.0
 var navigation_agent: NavigationAgent3D = null
 
-
 func set_movement_target(movement_target: Vector3):
 	movement_target.y = global_position.y
 	navigation_agent = NavigationAgent3D.new()
@@ -28,6 +27,7 @@ func _physics_process(delta):
 	new_velocity = new_velocity * movement_speed
 	velocity = new_velocity
 	move_and_slide()
+
 
 func _click(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton and event.button_index == 1 and event.pressed:
