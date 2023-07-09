@@ -182,20 +182,27 @@ func _on_room_generated(result, response_code, headers, body):
 	add_child(http_request)
 
 	var request_data = {
-		"world": world
+		"theme": room_theme
 	}
 	
 	var json_request = JSON.stringify(request_data)
 
-	# Perform the HTTP request. The URL below returns a music prompt at the time of writing.
-	var inference_url = PlayerPrefs.get_pref("inference_url")
-	var error = http_request.request(inference_url + "/music_prompt", [], 
-		HTTPClient.METHOD_POST, json_request)
-	if error != OK:
-		push_error("An error occurred in the HTTP request.")
-	body = (await http_request.request_completed)[3]
-	json = body.get_string_from_utf8()
-	var music_prompt = JSON.parse_string(json)["prompt"]
+	var music_prompt = ""
+	while true:
+		# Perform the HTTP request. The URL below returns a music prompt at the time of writing.
+		var inference_url = PlayerPrefs.get_pref("inference_url")
+		var error = http_request.request(inference_url + "/music_prompt", [], 
+			HTTPClient.METHOD_POST, json_request)
+		if error != OK:
+			push_error("An error occurred in the HTTP request.")
+		body = (await http_request.request_completed)[3]
+		json = body.get_string_from_utf8()
+		data = JSON.parse_string(json)
+		if data == null:
+			continue
+		print("Music prompt ", data)
+		music_prompt = data["prompt"]
+		break
 	print_debug("Music prompt: ", music_prompt)
 	loading_counter += 1
 	music_gen.connect("done_loading",on_child_done_loading)

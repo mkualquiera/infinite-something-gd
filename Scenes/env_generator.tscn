@@ -16,4 +16,5 @@ adjustment_enabled = true
 [node name="env_generator" type="WorldEnvironment"]
 environment = SubResource("Environment_ek713")
 script = ExtResource("1_p3621")
+sigma = 3.0
 load_on_ready = true

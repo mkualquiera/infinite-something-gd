@@ -5,6 +5,7 @@ class_name ObjectController
 @export var metadata: Dictionary = {}
 @export var interactions: Array = []
 var texture_prompt: String = ""
+var _world
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -28,6 +29,7 @@ func _process(delta):
 	pass
 
 func update_rendering(world):
+	_world = world
 	# Create an HTTP request node and connect its completion signal.
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
@@ -66,8 +68,30 @@ func _on_prompt_generated(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
 	
+	if data == null:
+		# Create an HTTP request node and connect its completion signal.
+		var http_request = HTTPRequest.new()
+		add_child(http_request)
+		http_request.connect("request_completed", _on_prompt_generated)
+		
+		var request_data = {
+			"world": _world,
+			"object": {
+				"name": obj_name,
+				"metadata": metadata
+			}
+		}
+		
+		var json_request = JSON.stringify(request_data)
+		
+		var inference_url = PlayerPrefs.get_pref("inference_url")
+		var error = http_request.request(inference_url + "/object_texture_prompt", [], 
+			HTTPClient.METHOD_POST, json_request)
+		if error != OK:
+			push_error("An error occurred in the HTTP request.")
+		return
+	
 	var prompt = data["prompt"]
-	print_debug(prompt)
 	
 	var texture_generator: MeshGenerator = get_parent().get_child(1)
 	texture_generator.mesh_description = prompt
@@ -77,8 +101,34 @@ func _on_prompt_generated(result, response_code, headers, body):
 func _on_interactions_generated(result, response_code, headers, body):
 	var json = body.get_string_from_utf8()
 	var data = JSON.parse_string(json)
-	if data == null:
-		print(json)
+	if data == null:	# Create an HTTP request node and connect its completion signal.
+		var http_request = HTTPRequest.new()
+		add_child(http_request)
+		http_request.connect("request_completed", _on_prompt_generated)
+		
+
+		var request_data = {
+			"world": _world,
+			"object": {
+				"name": obj_name,
+				"metadata": metadata
+			}
+		}
+		
+		var json_request = JSON.stringify(request_data)
+		
+		var inference_url = PlayerPrefs.get_pref("inference_url")
+			
+		http_request = HTTPRequest.new()
+		add_child(http_request)
+		http_request.connect("request_completed", _on_interactions_generated)
+			
+		inference_url = PlayerPrefs.get_pref("inference_url")
+		var error = http_request.request(inference_url + "/interact", [], 
+			HTTPClient.METHOD_POST, json_request)
+		if error != OK:
+			push_error("An error occurred in the HTTP request.")
+		return
 	interactions = data["interactions"]
 	on_child_done_loading()
 	print_debug(interactions)
