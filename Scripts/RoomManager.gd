@@ -20,6 +20,8 @@ func on_door_crossed(pos, offset):
 	rooms[pos + offset].door_map[-offset].debounce = true
 	rooms[pos].get_child(0)._on_player_leave()
 	rooms[pos + offset].get_child(0)._on_player_enter()
+	var theme = rooms[pos + offset].get_child(0).room_theme
+	theme_name.text = theme
 
 func enable_neighboring_doors(pos):
 	var neighbors = [
@@ -65,7 +67,6 @@ func _loading_finished(pos: Vector2i, theme: String):
 		loading_screen.hide()
 		rooms[pos].get_child(0)._on_player_enter()
 		
-	theme_name.text = theme
 	print_debug("Room finished loading ", pos)
 	emit_signal("loading_finished", pos)
 	loaded_rooms[pos] = true
