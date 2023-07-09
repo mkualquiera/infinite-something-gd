@@ -89,6 +89,12 @@ shape = SubResource("BoxShape3D_y6i7o")
 [node name="vis" parent="Player" instance=ExtResource("5_iwt3v")]
 transform = Transform3D(0.132, 0, 0, 0, 0.132, 0, 0, 0, 0.132, 0, -0.5, 0)
 
+[node name="ThemeName" type="Label" parent="."]
+offset_left = 861.0
+offset_right = 1154.0
+offset_bottom = 26.0
+text = "Theme: Hub"
+
 [node name="Panel" type="Panel" parent="."]
 anchors_preset = -1
 anchor_right = 1.0

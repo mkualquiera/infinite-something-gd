@@ -9,3 +9,6 @@ bones/1/position = Vector3(1.23352, 1.58662, 3.12469e-07)
 bones/1/rotation = Quaternion(3.3967e-07, 7.55986e-08, -0.986883, 0.161435)
 bones/6/position = Vector3(-1.26486, 1.56099, -3.01496e-07)
 bones/6/rotation = Quaternion(-3.65723e-07, -4.04482e-08, 0.990891, 0.134669)
+
+[node name="AnimationPlayer" parent="." index="1"]
+playback_default_blend_time = 0.5
