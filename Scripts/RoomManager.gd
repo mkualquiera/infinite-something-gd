@@ -21,6 +21,8 @@ func on_door_crossed(pos, offset):
 	rooms[pos].get_child(0)._on_player_leave()
 	rooms[pos + offset].get_child(0)._on_player_enter()
 	var theme = rooms[pos + offset].get_child(0).room_theme
+	if theme == null:
+		theme = ""
 	theme_name.text = theme
 
 func enable_neighboring_doors(pos):
@@ -54,7 +56,7 @@ func enqueue_room(pos: Vector2i):
 		push_error("An error occurred in the HTTP request.")
 	var body = (await http_request.request_completed)[3]
 	var theme: String = body.get_string_from_utf8()
-	if theme.is_empty():
+	if theme.is_empty() or theme == "null" or theme == null:
 		enqueue_room(pos)
 		return
 	print_debug("Room ", pos, " Theme: ", theme)
