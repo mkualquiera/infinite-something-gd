@@ -3,6 +3,7 @@ class_name PlayerMover
 
 var movement_speed: float = 2.0
 var navigation_agent: NavigationAgent3D = null
+@onready var vis: Node3D = $vis
 @onready var player_player: AnimationPlayer = $vis/AnimationPlayer
 
 func set_movement_target(movement_target: Vector3):
@@ -19,8 +20,8 @@ func _physics_process(delta):
 	if navigation_agent == null:
 		player_player.current_animation = "idle"
 		return
-	player_player.current_animation = "walk001"
 
+	player_player.current_animation = "walk001"
 	var current_agent_position: Vector3 = global_position
 	var next_path_position: Vector3 = navigation_agent.get_next_path_position()
 
@@ -28,7 +29,9 @@ func _physics_process(delta):
 	new_velocity = new_velocity.normalized()
 	new_velocity = new_velocity * movement_speed
 	velocity = new_velocity
-	move_and_slide()
+	new_velocity.y = 0
+	vis.look_at(vis.global_position - new_velocity)
+	var moved = move_and_slide()
 
 
 func _click(camera, event, position, normal, shape_idx):
